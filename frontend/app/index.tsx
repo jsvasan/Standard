@@ -297,12 +297,42 @@ export default function RegistrationForm() {
 
             {expandedSections.personal && (
               <View style={styles.sectionContent}>
-                <Text style={styles.label}>Your Phone Number *</Text>
+                <Text style={styles.label}>Full Name *</Text>
+                <TextInput
+                  style={styles.input}
+                  value={registrantName}
+                  onChangeText={setRegistrantName}
+                  placeholder="Enter your full name"
+                  placeholderTextColor="#999"
+                />
+
+                <Text style={styles.label}>Apartment Number *</Text>
+                <TextInput
+                  style={styles.input}
+                  value={registrantAptNumber}
+                  onChangeText={setRegistrantAptNumber}
+                  placeholder="Enter your apartment number"
+                  placeholderTextColor="#999"
+                />
+
+                <Text style={styles.label}>Date of Birth *</Text>
+                <TextInput
+                  style={styles.input}
+                  value={dateOfBirth}
+                  onChangeText={handleDateOfBirthChange}
+                  placeholder="YYYY-MM-DD"
+                  placeholderTextColor="#999"
+                />
+                {age && (
+                  <Text style={styles.ageDisplay}>Age: {age} years</Text>
+                )}
+
+                <Text style={styles.label}>Mobile Phone Number *</Text>
                 <TextInput
                   style={styles.input}
                   value={registrantPhone}
                   onChangeText={setRegistrantPhone}
-                  placeholder="Enter your phone number"
+                  placeholder="Enter your mobile phone number"
                   placeholderTextColor="#999"
                   keyboardType="phone-pad"
                 />
