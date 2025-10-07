@@ -150,6 +150,9 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "Created registrations list view with expandable cards. Includes export single and export all functionality using Share API. Formatted output for WhatsApp sharing. Not yet tested on frontend."
+      - working: "NA"
+        agent: "main"
+        comment: "Updated registrations view to display registrant phone number in card headers and detail view. Export functionality now includes phone number in formatted output. Ready for frontend testing."
 
 metadata:
   created_by: "main_agent"
