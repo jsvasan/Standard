@@ -240,6 +240,19 @@ export default function RegistrationForm() {
 
             {expandedSections.personal && (
               <View style={styles.sectionContent}>
+                <Text style={styles.label}>Your Phone Number *</Text>
+                <TextInput
+                  style={styles.input}
+                  value={registrantPhone}
+                  onChangeText={setRegistrantPhone}
+                  placeholder="Enter your phone number"
+                  placeholderTextColor="#999"
+                  keyboardType="phone-pad"
+                />
+                <Text style={styles.helperText}>
+                  This will be used as your unique identifier
+                </Text>
+
                 <Text style={styles.label}>Blood Group *</Text>
                 <View style={styles.bloodGroupContainer}>
                   {BLOOD_GROUPS.map((group) => (
