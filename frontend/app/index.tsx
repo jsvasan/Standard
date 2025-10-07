@@ -191,6 +191,7 @@ export default function RegistrationForm() {
           insurancePolicy,
           insuranceCompany,
           doctorName,
+          doctorContact,
           hospitalName,
           hospitalNumber,
           currentAilments,
