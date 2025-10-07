@@ -133,12 +133,13 @@ class PersonalInfo(BaseModel):
     dateOfBirth: str
     registrantPhone: str
     bloodGroup: str
-    insurancePolicy: str
-    insuranceCompany: str
-    doctorName: str
-    hospitalName: str
-    hospitalNumber: str
-    currentAilments: str
+    insurancePolicy: Optional[str] = ""
+    insuranceCompany: Optional[str] = ""
+    doctorName: Optional[str] = ""
+    doctorContact: Optional[str] = ""
+    hospitalName: Optional[str] = ""
+    hospitalNumber: Optional[str] = ""
+    currentAilments: Optional[str] = ""
 
 class Buddy(BaseModel):
     name: str
