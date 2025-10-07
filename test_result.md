@@ -102,10 +102,10 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Build a WhatsApp-shareable registration app that collects health registration details including personal health info (blood group, insurance, doctor, hospital, ailments), two buddies details (name, phone, email, apt number), and 1-3 next of kin contacts (name, phone, email). App should have collapsible sections, export feature for single and all registrations."
+user_problem_statement: "Build a WhatsApp-shareable registration app that collects health registration details including personal health info (registrant phone, blood group, insurance, doctor, hospital, ailments), two buddies details (name, phone, email, apt number), and 1-3 next of kin contacts (name, phone, email). App should have collapsible sections, export feature for single and all registrations. Only one registration per person using phone number as unique key."
 
 backend:
-  - task: "Create MongoDB schema and API endpoints for registrations"
+  - task: "Create MongoDB schema and API endpoints for registrations with unique phone constraint"
     implemented: true
     working: true
     file: "/app/backend/server.py"
@@ -119,6 +119,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "Comprehensive backend API testing completed successfully. All endpoints working correctly: ✅ POST /api/registrations validates exactly 2 buddies and 1-3 next of kin, properly rejects invalid data with appropriate status codes (400 for validation errors, 422 for email format errors). ✅ GET /api/registrations returns all registrations with proper formatting. ✅ GET /api/registrations/{id} correctly handles valid IDs (200), invalid ID formats (400), and non-existent IDs (404). Fixed minor exception handling issue where HTTPException(400) was being converted to 500 status code. All validation scenarios tested and working as expected."
+      - working: true
+        agent: "main"
+        comment: "Updated backend to support unique registration per phone number. Added registrantPhone field to PersonalInfo model. Modified POST endpoint to check for existing registration by phone and update if exists, or create new if not. This ensures only one registration per person using phone as unique key."
 
 frontend:
   - task: "Build registration form with collapsible sections"
