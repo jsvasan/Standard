@@ -116,6 +116,9 @@ backend:
       - working: true
         agent: "main"
         comment: "Created FastAPI endpoints: POST /api/registrations (create new registration), GET /api/registrations (get all), GET /api/registrations/{id} (get single). Tested with curl - all endpoints working correctly. Backend validates 2 buddies and 1-3 next of kin."
+      - working: true
+        agent: "testing"
+        comment: "Comprehensive backend API testing completed successfully. All endpoints working correctly: ✅ POST /api/registrations validates exactly 2 buddies and 1-3 next of kin, properly rejects invalid data with appropriate status codes (400 for validation errors, 422 for email format errors). ✅ GET /api/registrations returns all registrations with proper formatting. ✅ GET /api/registrations/{id} correctly handles valid IDs (200), invalid ID formats (400), and non-existent IDs (404). Fixed minor exception handling issue where HTTPException(400) was being converted to 500 status code. All validation scenarios tested and working as expected."
 
 frontend:
   - task: "Build registration form with collapsible sections"
