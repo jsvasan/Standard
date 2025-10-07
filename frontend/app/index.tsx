@@ -429,7 +429,7 @@ export default function RegistrationForm() {
               style={styles.sectionHeader}
               onPress={() => toggleSection('buddies')}
             >
-              <Text style={styles.sectionTitle}>Buddies Details (2 Required)</Text>
+              <Text style={styles.sectionTitle}>Buddies Details (1-2 Contacts)</Text>
               <Ionicons
                 name={expandedSections.buddies ? 'chevron-up' : 'chevron-down'}
                 size={24}
@@ -441,7 +441,14 @@ export default function RegistrationForm() {
               <View style={styles.sectionContent}>
                 {buddies.map((buddy, index) => (
                   <View key={index} style={styles.buddyCard}>
-                    <Text style={styles.buddyTitle}>Buddy {index + 1}</Text>
+                    <View style={styles.kinHeader}>
+                      <Text style={styles.buddyTitle}>Buddy {index + 1}</Text>
+                      {buddies.length > 1 && (
+                        <TouchableOpacity onPress={() => removeBuddy(index)}>
+                          <Ionicons name="trash-outline" size={20} color="#FF3B30" />
+                        </TouchableOpacity>
+                      )}
+                    </View>
 
                     <Text style={styles.label}>Name *</Text>
                     <TextInput
