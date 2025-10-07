@@ -704,31 +704,68 @@ const styles = StyleSheet.create({
     minHeight: 100,
     textAlignVertical: 'top',
   },
-  bloodGroupContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: 8,
-  },
-  bloodGroupButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 8,
+  dropdownButton: {
     backgroundColor: '#F8F8F8',
+    borderRadius: 8,
+    padding: 12,
     borderWidth: 1,
     borderColor: '#E5E5EA',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  bloodGroupButtonActive: {
-    backgroundColor: '#007AFF',
-    borderColor: '#007AFF',
-  },
-  bloodGroupText: {
+  dropdownText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#666',
+    color: '#999',
   },
-  bloodGroupTextActive: {
-    color: '#fff',
+  dropdownTextSelected: {
+    fontSize: 16,
+    color: '#000',
+    fontWeight: '600',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    maxHeight: '60%',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E5EA',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#000',
+  },
+  modalOption: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+  },
+  modalOptionSelected: {
+    backgroundColor: '#F0F8FF',
+  },
+  modalOptionText: {
+    fontSize: 16,
+    color: '#000',
+  },
+  modalOptionTextSelected: {
+    fontSize: 16,
+    color: '#007AFF',
+    fontWeight: '600',
   },
   buddyCard: {
     backgroundColor: '#F8F8F8',
