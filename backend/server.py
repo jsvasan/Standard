@@ -96,6 +96,8 @@ async def create_registration(registration: RegistrationCreate):
             nextOfKin=[NextOfKin(**kin) for kin in created_reg['nextOfKin']],
             createdAt=created_reg['createdAt']
         )
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"Error creating registration: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
