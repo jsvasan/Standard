@@ -31,6 +31,7 @@ export default function RegistrationForm() {
   });
 
   // Personal Info State
+  const [registrantPhone, setRegistrantPhone] = useState('');
   const [bloodGroup, setBloodGroup] = useState('');
   const [insurancePolicy, setInsurancePolicy] = useState('');
   const [insuranceCompany, setInsuranceCompany] = useState('');
