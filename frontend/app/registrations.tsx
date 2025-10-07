@@ -79,6 +79,17 @@ export default function RegistrationsView() {
 
   const formatRegistrationText = (reg: Registration) => {
     const date = new Date(reg.createdAt).toLocaleDateString();
+    
+    // Calculate age
+    let age = 'N/A';
+    try {
+      const dob = new Date(reg.personalInfo.dateOfBirth);
+      const today = new Date();
+      age = String(today.getFullYear() - dob.getFullYear() - 
+        ((today.getMonth() < dob.getMonth() || 
+         (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())) ? 1 : 0));
+    } catch (e) {}
+    
     return `
 ╔════════════════════════════════════════╗
 ║     HEALTH REGISTRATION DETAILS        ║
@@ -86,9 +97,14 @@ export default function RegistrationsView() {
 
 Registration Date: ${date}
 
-━━━ PERSONAL HEALTH INFORMATION ━━━
-Registrant Phone: ${reg.personalInfo.registrantPhone}
+───── REGISTRANT'S PERSONAL INFORMATION ─────
+Full Name: ${reg.personalInfo.registrantName}
+Apartment Number: ${reg.personalInfo.registrantAptNumber}
+Date of Birth: ${reg.personalInfo.dateOfBirth} (Age: ${age} years)
+Mobile Phone: ${reg.personalInfo.registrantPhone}
 Blood Group: ${reg.personalInfo.bloodGroup}
+
+───── MEDICAL INFORMATION ─────
 Insurance Policy: ${reg.personalInfo.insurancePolicy}
 Insurance Company: ${reg.personalInfo.insuranceCompany}
 Doctor Name: ${reg.personalInfo.doctorName}
