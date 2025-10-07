@@ -145,6 +145,7 @@ export default function RegistrationForm() {
     try {
       const registrationData = {
         personalInfo: {
+          registrantPhone,
           bloodGroup,
           insurancePolicy,
           insuranceCompany,
