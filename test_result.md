@@ -162,3 +162,5 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: "Backend implementation complete and tested with curl. All API endpoints working correctly. Frontend forms created with collapsible sections, validation, and export functionality. Ready for backend testing via testing agent."
+  - agent: "testing"
+    message: "Backend API testing completed successfully. All endpoints working correctly with proper validation. Fixed minor exception handling issue in server.py. All test scenarios passed: ✅ Valid registration creation ✅ Buddy count validation (exactly 2 required) ✅ Next of kin validation (1-3 required) ✅ Email format validation ✅ Get all registrations ✅ Get single registration by ID ✅ Invalid ID format handling ✅ Non-existent ID handling. Backend is fully functional and ready for production use."
