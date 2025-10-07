@@ -287,6 +287,9 @@ async def register_admin(admin: AdminCreate):
         result = await db.admins.insert_one(admin_dict)
         created_admin = await db.admins.find_one({"_id": result.inserted_id})
         
+        # Send confirmation email to admin
+        await send_admin_confirmation_email(created_admin)
+        
         return AdminResponse(
             id=str(created_admin['_id']),
             name=created_admin['name'],
