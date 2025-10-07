@@ -253,13 +253,20 @@ async def create_registration(registration: RegistrationCreate):
             result = await db.registrations.insert_one(reg_dict)
             result_reg = await db.registrations.find_one({"_id": result.inserted_id})
         
-        return RegistrationResponse(
+        response_data = RegistrationResponse(
             id=str(result_reg['_id']),
             personalInfo=PersonalInfo(**result_reg['personalInfo']),
             buddies=[Buddy(**buddy) for buddy in result_reg['buddies']],
             nextOfKin=[NextOfKin(**kin) for kin in result_reg['nextOfKin']],
             createdAt=result_reg['createdAt']
         )
+        
+        # Send email notification to admin
+        admin = await db.admins.find_one({})
+        if admin:
+            await send_email_notification(admin['email'], reg_dict)
+        
+        return response_data
     except HTTPException:
         raise
     except Exception as e:
