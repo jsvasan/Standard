@@ -83,6 +83,10 @@ export default function RegistrationForm() {
   };
 
   const validateForm = () => {
+    if (!registrantPhone) {
+      Alert.alert('Validation Error', 'Please enter your phone number');
+      return false;
+    }
     if (!bloodGroup) {
       Alert.alert('Validation Error', 'Please select a blood group');
       return false;
