@@ -334,27 +334,64 @@ export default function RegistrationForm() {
                 </Text>
 
                 <Text style={styles.label}>Blood Group *</Text>
-                <View style={styles.bloodGroupContainer}>
-                  {BLOOD_GROUPS.map((group) => (
-                    <TouchableOpacity
-                      key={group}
-                      style={[
-                        styles.bloodGroupButton,
-                        bloodGroup === group && styles.bloodGroupButtonActive,
-                      ]}
-                      onPress={() => setBloodGroup(group)}
-                    >
-                      <Text
-                        style={[
-                          styles.bloodGroupText,
-                          bloodGroup === group && styles.bloodGroupTextActive,
-                        ]}
-                      >
-                        {group}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </View>
+                <TouchableOpacity
+                  style={styles.dropdownButton}
+                  onPress={() => setShowBloodGroupPicker(true)}
+                >
+                  <Text style={bloodGroup ? styles.dropdownTextSelected : styles.dropdownText}>
+                    {bloodGroup || 'Select blood group'}
+                  </Text>
+                  <Ionicons name="chevron-down" size={20} color="#666" />
+                </TouchableOpacity>
+
+                <Modal
+                  visible={showBloodGroupPicker}
+                  transparent={true}
+                  animationType="slide"
+                  onRequestClose={() => setShowBloodGroupPicker(false)}
+                >
+                  <TouchableOpacity
+                    style={styles.modalOverlay}
+                    activeOpacity={1}
+                    onPress={() => setShowBloodGroupPicker(false)}
+                  >
+                    <View style={styles.modalContent}>
+                      <View style={styles.modalHeader}>
+                        <Text style={styles.modalTitle}>Select Blood Group</Text>
+                        <TouchableOpacity onPress={() => setShowBloodGroupPicker(false)}>
+                          <Ionicons name="close" size={24} color="#666" />
+                        </TouchableOpacity>
+                      </View>
+                      <ScrollView>
+                        {BLOOD_GROUPS.map((group) => (
+                          <TouchableOpacity
+                            key={group}
+                            style={[
+                              styles.modalOption,
+                              bloodGroup === group && styles.modalOptionSelected,
+                            ]}
+                            onPress={() => {
+                              setBloodGroup(group);
+                              setShowBloodGroupPicker(false);
+                            }}
+                          >
+                            <Text
+                              style={[
+                                styles.modalOptionText,
+                                bloodGroup === group && styles.modalOptionTextSelected,
+                              ]}
+                            >
+                              {group}
+                            </Text>
+                            {bloodGroup === group && (
+                              <Ionicons name="checkmark" size={24} color="#007AFF" />
+                            )}
+                          </TouchableOpacity>
+                        ))}
+                      </ScrollView>
+                    </View>
+                  </TouchableOpacity>
+                </Modal>
 
                 <Text style={styles.label}>Insurance Policy Number</Text>
                 <TextInput
