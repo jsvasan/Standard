@@ -230,6 +230,7 @@ export default function RegistrationForm() {
                 setInsurancePolicy('');
                 setInsuranceCompany('');
                 setDoctorName('');
+                setDoctorContact('');
                 setHospitalName('');
                 setHospitalNumber('');
                 setCurrentAilments('');
