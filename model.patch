@@ -1,0 +1,37 @@
+diff --git a/backend/server.py b/backend/server.py
+index bec2cf4..d826f56 100644
+--- a/backend/server.py
++++ b/backend/server.py
+@@ -96,6 +96,8 @@ async def create_registration(registration: RegistrationCreate):
+             nextOfKin=[NextOfKin(**kin) for kin in created_reg['nextOfKin']],
+             createdAt=created_reg['createdAt']
+         )
++    except HTTPException:
++        raise
+     except Exception as e:
+         logger.error(f"Error creating registration: {str(e)}")
+         raise HTTPException(status_code=500, detail=str(e))
+diff --git a/test_result.md b/test_result.md
+index 89f4dac..3ccbe3c 100644
+--- a/test_result.md
++++ b/test_result.md
+@@ -116,6 +116,9 @@ backend:
+       - working: true
+         agent: "main"
+         comment: "Created FastAPI endpoints: POST /api/registrations (create new registration), GET /api/registrations (get all), GET /api/registrations/{id} (get single). Tested with curl - all endpoints working correctly. Backend validates 2 buddies and 1-3 next of kin."
++      - working: true
++        agent: "testing"
++        comment: "Comprehensive backend API testing completed successfully. All endpoints working correctly: ✅ POST /api/registrations validates exactly 2 buddies and 1-3 next of kin, properly rejects invalid data with appropriate status codes (400 for validation errors, 422 for email format errors). ✅ GET /api/registrations returns all registrations with proper formatting. ✅ GET /api/registrations/{id} correctly handles valid IDs (200), invalid ID formats (400), and non-existent IDs (404). Fixed minor exception handling issue where HTTPException(400) was being converted to 500 status code. All validation scenarios tested and working as expected."
+ 
+ frontend:
+   - task: "Build registration form with collapsible sections"
+@@ -158,4 +161,6 @@ test_plan:
+ 
+ agent_communication:
+   - agent: "main"
+-    message: "Backend implementation complete and tested with curl. All API endpoints working correctly. Frontend forms created with collapsible sections, validation, and export functionality. Ready for backend testing via testing agent."
+\ No newline at end of file
++    message: "Backend implementation complete and tested with curl. All API endpoints working correctly. Frontend forms created with collapsible sections, validation, and export functionality. Ready for backend testing via testing agent."
++  - agent: "testing"
++    message: "Backend API testing completed successfully. All endpoints working correctly with proper validation. Fixed minor exception handling issue in server.py. All test scenarios passed: ✅ Valid registration creation ✅ Buddy count validation (exactly 2 required) ✅ Next of kin validation (1-3 required) ✅ Email format validation ✅ Get all registrations ✅ Get single registration by ID ✅ Invalid ID format handling ✅ Non-existent ID handling. Backend is fully functional and ready for production use."
+\ No newline at end of file
