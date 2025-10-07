@@ -31,6 +31,10 @@ export default function RegistrationForm() {
   });
 
   // Personal Info State
+  const [registrantName, setRegistrantName] = useState('');
+  const [registrantAptNumber, setRegistrantAptNumber] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [age, setAge] = useState('');
   const [registrantPhone, setRegistrantPhone] = useState('');
   const [bloodGroup, setBloodGroup] = useState('');
   const [insurancePolicy, setInsurancePolicy] = useState('');
@@ -40,9 +44,8 @@ export default function RegistrationForm() {
   const [hospitalNumber, setHospitalNumber] = useState('');
   const [currentAilments, setCurrentAilments] = useState('');
 
-  // Buddies State (2 buddies)
+  // Buddies State (1-2 buddies)
   const [buddies, setBuddies] = useState([
-    { name: '', phone: '', email: '', aptNumber: '' },
     { name: '', phone: '', email: '', aptNumber: '' },
   ]);
 
