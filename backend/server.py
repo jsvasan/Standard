@@ -37,25 +37,79 @@ GMAIL_PASSWORD = os.environ.get('GMAIL_PASSWORD')
 async def send_email_notification(admin_email: str, registration_data: dict):
     try:
         # Format registration data for email
+        # Calculate age from date of birth
+        from datetime import datetime
+        try:
+            dob = datetime.strptime(registration_data['personalInfo']['dateOfBirth'], '%Y-%m-%d')
+            today = datetime.today()
+            age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+        except:
+            age = "N/A"
+        
         email_body = f"""
         <html>
-        <body>
-        <h2>New Health Registration Submitted</h2>
-        <h3>Personal Information:</h3>
-        <ul>
-            <li><strong>Name:</strong> {registration_data['personalInfo']['registrantName']}</li>
-            <li><strong>Apartment:</strong> {registration_data['personalInfo']['registrantAptNumber']}</li>
-            <li><strong>Date of Birth:</strong> {registration_data['personalInfo']['dateOfBirth']}</li>
-            <li><strong>Phone:</strong> {registration_data['personalInfo']['registrantPhone']}</li>
-            <li><strong>Blood Group:</strong> {registration_data['personalInfo']['bloodGroup']}</li>
-            <li><strong>Insurance Policy:</strong> {registration_data['personalInfo']['insurancePolicy']}</li>
-            <li><strong>Insurance Company / ECHS, etc:</strong> {registration_data['personalInfo']['insuranceCompany']}</li>
-            <li><strong>Doctor's Name:</strong> {registration_data['personalInfo']['doctorName']}</li>
-            <li><strong>Doctor's Contact:</strong> {registration_data['personalInfo']['doctorContact']}</li>
-            <li><strong>Hospital:</strong> {registration_data['personalInfo']['hospitalName']}</li>
-            <li><strong>Hospital Number:</strong> {registration_data['personalInfo']['hospitalNumber']}</li>
-            <li><strong>Current Ailments:</strong> {registration_data['personalInfo']['currentAilments']}</li>
-        </ul>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        <div style="max-width: 800px; margin: 0 auto; padding: 20px; background: #f9f9f9;">
+            <div style="background: #007AFF; color: white; padding: 20px; border-radius: 8px 8px 0 0;">
+                <h2 style="margin: 0;">New Health Registration Submitted</h2>
+            </div>
+            
+            <div style="background: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <h3 style="color: #007AFF; border-bottom: 2px solid #007AFF; padding-bottom: 10px;">Registrant's Personal Information</h3>
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+                    <tr style="background: #f5f5f5;">
+                        <td style="padding: 12px; font-weight: bold; width: 40%;">Full Name:</td>
+                        <td style="padding: 12px;">{registration_data['personalInfo']['registrantName']}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; font-weight: bold;">Apartment Number:</td>
+                        <td style="padding: 12px;">{registration_data['personalInfo']['registrantAptNumber']}</td>
+                    </tr>
+                    <tr style="background: #f5f5f5;">
+                        <td style="padding: 12px; font-weight: bold;">Date of Birth:</td>
+                        <td style="padding: 12px;">{registration_data['personalInfo']['dateOfBirth']} (Age: {age} years)</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; font-weight: bold;">Mobile Phone:</td>
+                        <td style="padding: 12px;">{registration_data['personalInfo']['registrantPhone']}</td>
+                    </tr>
+                    <tr style="background: #f5f5f5;">
+                        <td style="padding: 12px; font-weight: bold;">Blood Group:</td>
+                        <td style="padding: 12px;"><strong style="color: #FF3B30; font-size: 16px;">{registration_data['personalInfo']['bloodGroup']}</strong></td>
+                    </tr>
+                </table>
+                
+                <h3 style="color: #007AFF; border-bottom: 2px solid #007AFF; padding-bottom: 10px;">Medical Information</h3>
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+                    <tr style="background: #f5f5f5;">
+                        <td style="padding: 12px; font-weight: bold; width: 40%;">Insurance Policy Number:</td>
+                        <td style="padding: 12px;">{registration_data['personalInfo']['insurancePolicy'] or 'Not provided'}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; font-weight: bold;">Insurance Company / ECHS:</td>
+                        <td style="padding: 12px;">{registration_data['personalInfo']['insuranceCompany'] or 'Not provided'}</td>
+                    </tr>
+                    <tr style="background: #f5f5f5;">
+                        <td style="padding: 12px; font-weight: bold;">Doctor's Name:</td>
+                        <td style="padding: 12px;">{registration_data['personalInfo']['doctorName'] or 'Not provided'}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; font-weight: bold;">Doctor's Contact:</td>
+                        <td style="padding: 12px;">{registration_data['personalInfo']['doctorContact'] or 'Not provided'}</td>
+                    </tr>
+                    <tr style="background: #f5f5f5;">
+                        <td style="padding: 12px; font-weight: bold;">Hospital Name:</td>
+                        <td style="padding: 12px;">{registration_data['personalInfo']['hospitalName'] or 'Not provided'}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 12px; font-weight: bold;">Hospital Registration Number:</td>
+                        <td style="padding: 12px;">{registration_data['personalInfo']['hospitalNumber'] or 'Not provided'}</td>
+                    </tr>
+                    <tr style="background: #f5f5f5;">
+                        <td style="padding: 12px; font-weight: bold; vertical-align: top;">Current Ailments:</td>
+                        <td style="padding: 12px;">{registration_data['personalInfo']['currentAilments'] or 'None reported'}</td>
+                    </tr>
+                </table>
         
         <h3>Buddies:</h3>
         """
