@@ -179,6 +179,7 @@ export default function RegistrationForm() {
               text: 'Submit Another',
               onPress: () => {
                 // Reset form
+                setRegistrantPhone('');
                 setBloodGroup('');
                 setInsurancePolicy('');
                 setInsuranceCompany('');
