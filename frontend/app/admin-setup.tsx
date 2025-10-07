@@ -72,20 +72,41 @@ export default function AdminSetup() {
       });
 
       if (response.ok) {
-        Alert.alert(
-          'Success',
-          'Admin registered successfully!',
-          [{ text: 'OK', onPress: () => router.replace('/') }]
-        );
+        // Immediate success feedback
+        console.log('Admin registered successfully');
+        
+        // Navigate back to home immediately with success state
+        setTimeout(() => {
+          router.replace('/');
+        }, 500);
+        
+        // Show alert after navigation starts
+        if (Platform.OS === 'web') {
+          alert('✅ Admin registered successfully! You can now start collecting registrations.');
+        } else {
+          Alert.alert(
+            'Success',
+            'Admin registered successfully!',
+            [{ text: 'OK' }]
+          );
+        }
       } else {
         const error = await response.json();
-        Alert.alert('Error', error.detail || 'Failed to register admin');
+        setLoading(false);
+        if (Platform.OS === 'web') {
+          alert('Error: ' + (error.detail || 'Failed to register admin'));
+        } else {
+          Alert.alert('Error', error.detail || 'Failed to register admin');
+        }
       }
     } catch (error) {
-      Alert.alert('Error', 'Network error. Please check your connection.');
-      console.error(error);
-    } finally {
       setLoading(false);
+      console.error('Registration error:', error);
+      if (Platform.OS === 'web') {
+        alert('Network error. Please check your connection.');
+      } else {
+        Alert.alert('Error', 'Network error. Please check your connection.');
+      }
     }
   };
 
