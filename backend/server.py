@@ -313,12 +313,14 @@ class Admin(BaseModel):
     name: str
     phone: str
     email: EmailStr
+    password_hash: str
     createdAt: datetime = Field(default_factory=datetime.utcnow)
 
 class AdminCreate(BaseModel):
     name: str
     phone: str
     email: EmailStr
+    password: str
 
 class AdminResponse(BaseModel):
     id: str
@@ -326,6 +328,10 @@ class AdminResponse(BaseModel):
     phone: str
     email: str
     createdAt: datetime
+
+class AdminDeleteRequest(BaseModel):
+    email: str
+    password: str
 
 class PersonalInfo(BaseModel):
     registrantName: str
