@@ -490,6 +490,13 @@ export default function RegistrationForm() {
                     />
                   </View>
                 ))}
+                
+                {buddies.length < 2 && (
+                  <TouchableOpacity style={styles.addButton} onPress={addBuddy}>
+                    <Ionicons name="add-circle-outline" size={24} color="#007AFF" />
+                    <Text style={styles.addButtonText}>Add Another Buddy</Text>
+                  </TouchableOpacity>
+                )}
               </View>
             )}
           </View>
