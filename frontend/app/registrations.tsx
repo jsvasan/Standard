@@ -16,6 +16,7 @@ import { useRouter } from 'expo-router';
 const EXPO_PUBLIC_BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 interface PersonalInfo {
+  registrantPhone: string;
   bloodGroup: string;
   insurancePolicy: string;
   insuranceCompany: string;
