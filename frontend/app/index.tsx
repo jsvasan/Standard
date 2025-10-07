@@ -61,10 +61,39 @@ export default function RegistrationForm() {
     }));
   };
 
+  const calculateAge = (dob: string) => {
+    if (!dob) return '';
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age.toString();
+  };
+
+  const handleDateOfBirthChange = (dob: string) => {
+    setDateOfBirth(dob);
+    setAge(calculateAge(dob));
+  };
+
   const updateBuddy = (index: number, field: string, value: string) => {
     const newBuddies = [...buddies];
     newBuddies[index] = { ...newBuddies[index], [field]: value };
     setBuddies(newBuddies);
+  };
+
+  const addBuddy = () => {
+    if (buddies.length < 2) {
+      setBuddies([...buddies, { name: '', phone: '', email: '', aptNumber: '' }]);
+    }
+  };
+
+  const removeBuddy = (index: number) => {
+    if (buddies.length > 1) {
+      setBuddies(buddies.filter((_, i) => i !== index));
+    }
   };
 
   const updateNextOfKin = (index: number, field: string, value: string) => {
