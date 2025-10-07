@@ -199,9 +199,14 @@ ${formatRegistrationText(reg)}`).join('\n')}
           <Ionicons name="arrow-back" size={24} color="#007AFF" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Registrations</Text>
-        <TouchableOpacity onPress={handleExportAll} style={styles.exportAllButton}>
-          <Ionicons name="share-outline" size={24} color="#007AFF" />
-        </TouchableOpacity>
+        <View style={styles.headerButtons}>
+          <TouchableOpacity onPress={() => router.push('/admin-manage')} style={styles.iconButton}>
+            <Ionicons name="settings-outline" size={24} color="#007AFF" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleExportAll} style={styles.exportAllButton}>
+            <Ionicons name="share-outline" size={24} color="#007AFF" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       {registrations.length === 0 ? (
