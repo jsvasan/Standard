@@ -49,8 +49,9 @@ async def send_email_notification(admin_email: str, registration_data: dict):
             <li><strong>Phone:</strong> {registration_data['personalInfo']['registrantPhone']}</li>
             <li><strong>Blood Group:</strong> {registration_data['personalInfo']['bloodGroup']}</li>
             <li><strong>Insurance Policy:</strong> {registration_data['personalInfo']['insurancePolicy']}</li>
-            <li><strong>Insurance Company:</strong> {registration_data['personalInfo']['insuranceCompany']}</li>
-            <li><strong>Doctor:</strong> {registration_data['personalInfo']['doctorName']}</li>
+            <li><strong>Insurance Company / ECHS, etc:</strong> {registration_data['personalInfo']['insuranceCompany']}</li>
+            <li><strong>Doctor's Name:</strong> {registration_data['personalInfo']['doctorName']}</li>
+            <li><strong>Doctor's Contact:</strong> {registration_data['personalInfo']['doctorContact']}</li>
             <li><strong>Hospital:</strong> {registration_data['personalInfo']['hospitalName']}</li>
             <li><strong>Hospital Number:</strong> {registration_data['personalInfo']['hospitalNumber']}</li>
             <li><strong>Current Ailments:</strong> {registration_data['personalInfo']['currentAilments']}</li>
