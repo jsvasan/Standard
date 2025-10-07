@@ -110,33 +110,75 @@ async def send_email_notification(admin_email: str, registration_data: dict):
                         <td style="padding: 12px;">{registration_data['personalInfo']['currentAilments'] or 'None reported'}</td>
                     </tr>
                 </table>
-        
-        <h3>Buddies:</h3>
-        """
+                
+                <h3 style="color: #007AFF; border-bottom: 2px solid #007AFF; padding-bottom: 10px; margin-top: 30px;">Buddies Information</h3>
+                """
         
         for idx, buddy in enumerate(registration_data['buddies'], 1):
+            bg_color = '#f5f5f5' if idx % 2 == 0 else 'white'
             email_body += f"""
-            <h4>Buddy {idx}:</h4>
-            <ul>
-                <li><strong>Name:</strong> {buddy['name']}</li>
-                <li><strong>Phone:</strong> {buddy['phone']}</li>
-                <li><strong>Email:</strong> {buddy['email']}</li>
-                <li><strong>Apartment:</strong> {buddy['aptNumber']}</li>
-            </ul>
+                <div style="background: {bg_color}; padding: 15px; margin-bottom: 15px; border-radius: 5px; border-left: 4px solid #34C759;">
+                    <h4 style="margin: 0 0 10px 0; color: #34C759;">Buddy {idx}</h4>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold; width: 35%;">Name:</td>
+                            <td style="padding: 8px;">{buddy['name']}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">Phone:</td>
+                            <td style="padding: 8px;">{buddy['phone']}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">Email:</td>
+                            <td style="padding: 8px;">{buddy['email']}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">Apartment Number:</td>
+                            <td style="padding: 8px;">{buddy['aptNumber']}</td>
+                        </tr>
+                    </table>
+                </div>
             """
         
-        email_body += "<h3>Next of Kin:</h3>"
+        email_body += """
+                <h3 style="color: #007AFF; border-bottom: 2px solid #007AFF; padding-bottom: 10px; margin-top: 30px;">Next of Kin Contacts</h3>
+                """
+        
         for idx, kin in enumerate(registration_data['nextOfKin'], 1):
+            bg_color = '#f5f5f5' if idx % 2 == 0 else 'white'
             email_body += f"""
-            <h4>Contact {idx}:</h4>
-            <ul>
-                <li><strong>Name:</strong> {kin['name']}</li>
-                <li><strong>Phone:</strong> {kin['phone']}</li>
-                <li><strong>Email:</strong> {kin['email']}</li>
-            </ul>
+                <div style="background: {bg_color}; padding: 15px; margin-bottom: 15px; border-radius: 5px; border-left: 4px solid #FF9500;">
+                    <h4 style="margin: 0 0 10px 0; color: #FF9500;">Contact {idx}</h4>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold; width: 35%;">Name:</td>
+                            <td style="padding: 8px;">{kin['name']}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">Phone:</td>
+                            <td style="padding: 8px;">{kin['phone']}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; font-weight: bold;">Email:</td>
+                            <td style="padding: 8px;">{kin['email']}</td>
+                        </tr>
+                    </table>
+                </div>
             """
         
-        email_body += "</body></html>"
+        email_body += """
+            </div>
+            
+            <div style="background: #f0f0f0; padding: 20px; text-align: center; margin-top: 20px; border-radius: 8px;">
+                <p style="margin: 0; color: #666; font-size: 14px;">
+                    This registration was submitted via the Health Registration App<br>
+                    Registration Date: """ + datetime.now().strftime('%B %d, %Y at %I:%M %p') + """
+                </p>
+            </div>
+        </div>
+        </body>
+        </html>
+        """
         
         # Create email message
         message = MIMEMultipart('alternative')
