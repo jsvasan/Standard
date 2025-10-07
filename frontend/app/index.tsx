@@ -872,4 +872,40 @@ const styles = StyleSheet.create({
     color: '#007AFF',
     marginTop: 4,
   },
+  adminBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF3CD',
+    padding: 16,
+    marginHorizontal: 16,
+    marginTop: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#FFC107',
+    gap: 12,
+  },
+  adminBannerContent: {
+    flex: 1,
+  },
+  adminBannerTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#000',
+    marginBottom: 4,
+  },
+  adminBannerText: {
+    fontSize: 14,
+    color: '#666',
+  },
+  setupButton: {
+    backgroundColor: '#007AFF',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 6,
+  },
+  setupButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#fff',
+  },
 });
