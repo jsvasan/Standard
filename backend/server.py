@@ -29,7 +29,104 @@ app = FastAPI()
 api_router = APIRouter(prefix="/api")
 
 
+# Email configuration
+GMAIL_EMAIL = os.environ.get('GMAIL_EMAIL')
+GMAIL_PASSWORD = os.environ.get('GMAIL_PASSWORD')
+
+# Email sending function
+async def send_email_notification(admin_email: str, registration_data: dict):
+    try:
+        # Format registration data for email
+        email_body = f"""
+        <html>
+        <body>
+        <h2>New Health Registration Submitted</h2>
+        <h3>Personal Information:</h3>
+        <ul>
+            <li><strong>Name:</strong> {registration_data['personalInfo']['registrantName']}</li>
+            <li><strong>Apartment:</strong> {registration_data['personalInfo']['registrantAptNumber']}</li>
+            <li><strong>Date of Birth:</strong> {registration_data['personalInfo']['dateOfBirth']}</li>
+            <li><strong>Phone:</strong> {registration_data['personalInfo']['registrantPhone']}</li>
+            <li><strong>Blood Group:</strong> {registration_data['personalInfo']['bloodGroup']}</li>
+            <li><strong>Insurance Policy:</strong> {registration_data['personalInfo']['insurancePolicy']}</li>
+            <li><strong>Insurance Company:</strong> {registration_data['personalInfo']['insuranceCompany']}</li>
+            <li><strong>Doctor:</strong> {registration_data['personalInfo']['doctorName']}</li>
+            <li><strong>Hospital:</strong> {registration_data['personalInfo']['hospitalName']}</li>
+            <li><strong>Hospital Number:</strong> {registration_data['personalInfo']['hospitalNumber']}</li>
+            <li><strong>Current Ailments:</strong> {registration_data['personalInfo']['currentAilments']}</li>
+        </ul>
+        
+        <h3>Buddies:</h3>
+        """
+        
+        for idx, buddy in enumerate(registration_data['buddies'], 1):
+            email_body += f"""
+            <h4>Buddy {idx}:</h4>
+            <ul>
+                <li><strong>Name:</strong> {buddy['name']}</li>
+                <li><strong>Phone:</strong> {buddy['phone']}</li>
+                <li><strong>Email:</strong> {buddy['email']}</li>
+                <li><strong>Apartment:</strong> {buddy['aptNumber']}</li>
+            </ul>
+            """
+        
+        email_body += "<h3>Next of Kin:</h3>"
+        for idx, kin in enumerate(registration_data['nextOfKin'], 1):
+            email_body += f"""
+            <h4>Contact {idx}:</h4>
+            <ul>
+                <li><strong>Name:</strong> {kin['name']}</li>
+                <li><strong>Phone:</strong> {kin['phone']}</li>
+                <li><strong>Email:</strong> {kin['email']}</li>
+            </ul>
+            """
+        
+        email_body += "</body></html>"
+        
+        # Create email message
+        message = MIMEMultipart('alternative')
+        message['From'] = GMAIL_EMAIL
+        message['To'] = admin_email
+        message['Subject'] = f"New Health Registration - {registration_data['personalInfo']['registrantName']}"
+        
+        html_part = MIMEText(email_body, 'html')
+        message.attach(html_part)
+        
+        # Send email via Gmail SMTP
+        await aiosmtplib.send(
+            message,
+            hostname='smtp.gmail.com',
+            port=587,
+            username=GMAIL_EMAIL,
+            password=GMAIL_PASSWORD,
+            start_tls=True
+        )
+        
+        logger.info(f"Email sent successfully to {admin_email}")
+        return True
+    except Exception as e:
+        logger.error(f"Failed to send email: {str(e)}")
+        return False
+
 # Define Models
+class Admin(BaseModel):
+    name: str
+    phone: str
+    email: EmailStr
+    createdAt: datetime = Field(default_factory=datetime.utcnow)
+
+class AdminCreate(BaseModel):
+    name: str
+    phone: str
+    email: EmailStr
+
+class AdminResponse(BaseModel):
+    id: str
+    name: str
+    phone: str
+    email: str
+    createdAt: datetime
+
 class PersonalInfo(BaseModel):
     registrantName: str
     registrantAptNumber: str
