@@ -423,6 +423,30 @@ async def get_admin():
         logger.error(f"Error fetching admin: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.delete("/admin/delete")
+async def delete_admin(email: dict):
+    try:
+        # Find admin with matching email
+        admin = await db.admins.find_one({"email": email.get("email")})
+        
+        if not admin:
+            raise HTTPException(status_code=404, detail="Admin not found with this email")
+        
+        # Delete the admin
+        result = await db.admins.delete_one({"_id": admin['_id']})
+        
+        if result.deleted_count == 1:
+            logger.info(f"Admin deleted: {admin['email']}")
+            return {"message": "Admin deleted successfully"}
+        else:
+            raise HTTPException(status_code=500, detail="Failed to delete admin")
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting admin: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.post("/registrations", response_model=RegistrationResponse)
 async def create_registration(registration: RegistrationCreate):
     try:
