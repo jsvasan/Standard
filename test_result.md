@@ -144,11 +144,11 @@ frontend:
   
   - task: "Build registrations view with export functionality"
     implemented: true
-    working: "NA"
+    working: false
     file: "/app/frontend/app/registrations.tsx"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
@@ -156,6 +156,9 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "Updated registrations view to display registrant phone number in card headers and detail view. Export functionality now includes phone number in formatted output. Ready for frontend testing."
+      - working: false
+        agent: "testing"
+        comment: "CRITICAL ISSUE: Navigation to registrations view is not working. The list icon in the header is not clickable/accessible via playwright testing. The registrations.tsx file exists and appears well-structured, but users cannot navigate to it from the main form. This blocks the entire registrations viewing and export functionality. Backend API issue with old data without registrantPhone field may also be causing problems when trying to load registrations."
 
 metadata:
   created_by: "main_agent"
