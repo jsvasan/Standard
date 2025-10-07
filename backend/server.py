@@ -205,6 +205,108 @@ async def send_email_notification(admin_email: str, registration_data: dict):
         logger.error(f"Failed to send email: {str(e)}")
         return False
 
+# Admin confirmation email function
+async def send_admin_confirmation_email(admin_data: dict):
+    try:
+        email_body = f"""
+        <html>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        <div style="max-width: 600px; margin: 0 auto; padding: 20px; background: #f9f9f9;">
+            <div style="background: #007AFF; color: white; padding: 30px; border-radius: 8px 8px 0 0; text-align: center;">
+                <h1 style="margin: 0; font-size: 28px;">🎉 Welcome Admin!</h1>
+            </div>
+            
+            <div style="background: white; padding: 40px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <h2 style="color: #007AFF; margin-top: 0;">Admin Registration Successful</h2>
+                
+                <p style="font-size: 16px; color: #666; margin: 20px 0;">
+                    You have been successfully registered as the administrator for the Health Registration App. 
+                    You will now receive email notifications for all new health registrations.
+                </p>
+                
+                <div style="background: #f5f9ff; padding: 20px; border-radius: 8px; margin: 30px 0; border-left: 4px solid #007AFF;">
+                    <h3 style="margin: 0 0 15px 0; color: #007AFF;">Your Admin Details:</h3>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <td style="padding: 8px 0; font-weight: bold; color: #666;">Name:</td>
+                            <td style="padding: 8px 0; color: #000;">{admin_data['name']}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0; font-weight: bold; color: #666;">Phone:</td>
+                            <td style="padding: 8px 0; color: #000;">{admin_data['phone']}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0; font-weight: bold; color: #666;">Email:</td>
+                            <td style="padding: 8px 0; color: #000;">{admin_data['email']}</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px 0; font-weight: bold; color: #666;">Registration Date:</td>
+                            <td style="padding: 8px 0; color: #000;">{admin_data['createdAt'].strftime('%B %d, %Y at %I:%M %p')}</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div style="background: #fff3cd; padding: 20px; border-radius: 8px; margin: 30px 0; border-left: 4px solid #ffc107;">
+                    <h3 style="margin: 0 0 10px 0; color: #856404;">📧 Email Notifications</h3>
+                    <p style="margin: 0; color: #856404; font-size: 14px;">
+                        You will receive detailed email notifications whenever a new health registration is submitted. 
+                        Each email will include complete registrant information, buddy details, and next of kin contacts.
+                    </p>
+                </div>
+                
+                <div style="margin: 30px 0; padding: 20px; background: #f8f9fa; border-radius: 8px;">
+                    <h3 style="margin: 0 0 15px 0; color: #333;">What You Can Do:</h3>
+                    <ul style="margin: 0; padding-left: 20px; color: #666;">
+                        <li style="margin: 10px 0;">Receive instant email notifications for all registrations</li>
+                        <li style="margin: 10px 0;">View all registrations in the admin dashboard</li>
+                        <li style="margin: 10px 0;">Export individual or all registrations</li>
+                        <li style="margin: 10px 0;">Share registration details via WhatsApp</li>
+                    </ul>
+                </div>
+                
+                <div style="text-align: center; margin: 30px 0;">
+                    <p style="font-size: 18px; color: #333; font-weight: 600;">
+                        The Health Registration App is now ready to collect registrations!
+                    </p>
+                </div>
+            </div>
+            
+            <div style="background: #f0f0f0; padding: 20px; text-align: center; margin-top: 20px; border-radius: 8px;">
+                <p style="margin: 0; color: #666; font-size: 14px;">
+                    Health Registration App - Admin Confirmation<br>
+                    If you have any questions, please contact support.
+                </p>
+            </div>
+        </div>
+        </body>
+        </html>
+        """
+        
+        # Create email message
+        message = MIMEMultipart('alternative')
+        message['From'] = GMAIL_EMAIL
+        message['To'] = admin_data['email']
+        message['Subject'] = f"✅ Admin Registration Successful - {admin_data['name']}"
+        
+        html_part = MIMEText(email_body, 'html')
+        message.attach(html_part)
+        
+        # Send email via Gmail SMTP
+        await aiosmtplib.send(
+            message,
+            hostname='smtp.gmail.com',
+            port=587,
+            username=GMAIL_EMAIL,
+            password=GMAIL_PASSWORD,
+            start_tls=True
+        )
+        
+        logger.info(f"Admin confirmation email sent successfully to {admin_data['email']}")
+        return True
+    except Exception as e:
+        logger.error(f"Failed to send admin confirmation email: {str(e)}")
+        return False
+
 # Define Models
 class Admin(BaseModel):
     name: str
