@@ -82,20 +82,34 @@ async def create_registration(registration: RegistrationCreate):
         if len(registration.nextOfKin) < 1 or len(registration.nextOfKin) > 3:
             raise HTTPException(status_code=400, detail="Between 1 and 3 next of kin contacts are required")
         
+        # Check if registration already exists for this phone number
+        existing_reg = await db.registrations.find_one({
+            "personalInfo.registrantPhone": registration.personalInfo.registrantPhone
+        })
+        
         reg_dict = registration.dict()
-        reg_dict['createdAt'] = datetime.utcnow()
+        reg_dict['updatedAt'] = datetime.utcnow()
         
-        result = await db.registrations.insert_one(reg_dict)
-        
-        # Fetch the created registration
-        created_reg = await db.registrations.find_one({"_id": result.inserted_id})
+        if existing_reg:
+            # Update existing registration
+            reg_dict['createdAt'] = existing_reg['createdAt']
+            await db.registrations.update_one(
+                {"_id": existing_reg['_id']},
+                {"$set": reg_dict}
+            )
+            result_reg = await db.registrations.find_one({"_id": existing_reg['_id']})
+        else:
+            # Create new registration
+            reg_dict['createdAt'] = datetime.utcnow()
+            result = await db.registrations.insert_one(reg_dict)
+            result_reg = await db.registrations.find_one({"_id": result.inserted_id})
         
         return RegistrationResponse(
-            id=str(created_reg['_id']),
-            personalInfo=PersonalInfo(**created_reg['personalInfo']),
-            buddies=[Buddy(**buddy) for buddy in created_reg['buddies']],
-            nextOfKin=[NextOfKin(**kin) for kin in created_reg['nextOfKin']],
-            createdAt=created_reg['createdAt']
+            id=str(result_reg['_id']),
+            personalInfo=PersonalInfo(**result_reg['personalInfo']),
+            buddies=[Buddy(**buddy) for buddy in result_reg['buddies']],
+            nextOfKin=[NextOfKin(**kin) for kin in result_reg['nextOfKin']],
+            createdAt=result_reg['createdAt']
         )
     except HTTPException:
         raise
