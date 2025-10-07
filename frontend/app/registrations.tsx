@@ -264,11 +264,31 @@ ${formatRegistrationText(reg)}`).join('\n')}
                 {isExpanded && (
                   <View style={styles.cardContent}>
                     <View style={styles.infoSection}>
-                      <Text style={styles.infoSectionTitle}>Personal Health</Text>
+                      <Text style={styles.infoSectionTitle}>Registrant's Personal Information</Text>
                       <View style={styles.infoRow}>
-                        <Text style={styles.infoLabel}>Phone:</Text>
+                        <Text style={styles.infoLabel}>Full Name:</Text>
+                        <Text style={styles.infoValue}>{reg.personalInfo.registrantName}</Text>
+                      </View>
+                      <View style={styles.infoRow}>
+                        <Text style={styles.infoLabel}>Apartment:</Text>
+                        <Text style={styles.infoValue}>{reg.personalInfo.registrantAptNumber}</Text>
+                      </View>
+                      <View style={styles.infoRow}>
+                        <Text style={styles.infoLabel}>Date of Birth:</Text>
+                        <Text style={styles.infoValue}>{reg.personalInfo.dateOfBirth}</Text>
+                      </View>
+                      <View style={styles.infoRow}>
+                        <Text style={styles.infoLabel}>Mobile Phone:</Text>
                         <Text style={styles.infoValue}>{reg.personalInfo.registrantPhone}</Text>
                       </View>
+                      <View style={styles.infoRow}>
+                        <Text style={styles.infoLabel}>Blood Group:</Text>
+                        <Text style={styles.infoValue}>{reg.personalInfo.bloodGroup}</Text>
+                      </View>
+                    </View>
+
+                    <View style={styles.infoSection}>
+                      <Text style={styles.infoSectionTitle}>Medical Information</Text>
                       <View style={styles.infoRow}>
                         <Text style={styles.infoLabel}>Insurance Policy:</Text>
                         <Text style={styles.infoValue}>{reg.personalInfo.insurancePolicy}</Text>
