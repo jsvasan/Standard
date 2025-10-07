@@ -174,6 +174,52 @@ class RegistrationResponse(BaseModel):
 async def root():
     return {"message": "Registration API"}
 
+# Admin endpoints
+@api_router.post("/admin/register", response_model=AdminResponse)
+async def register_admin(admin: AdminCreate):
+    try:
+        # Check if admin already exists
+        existing_admin = await db.admins.find_one({})
+        if existing_admin:
+            raise HTTPException(status_code=400, detail="Admin already exists. Only one admin is allowed.")
+        
+        admin_dict = admin.dict()
+        admin_dict['createdAt'] = datetime.utcnow()
+        
+        result = await db.admins.insert_one(admin_dict)
+        created_admin = await db.admins.find_one({"_id": result.inserted_id})
+        
+        return AdminResponse(
+            id=str(created_admin['_id']),
+            name=created_admin['name'],
+            phone=created_admin['phone'],
+            email=created_admin['email'],
+            createdAt=created_admin['createdAt']
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error registering admin: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.get("/admin", response_model=Optional[AdminResponse])
+async def get_admin():
+    try:
+        admin = await db.admins.find_one({})
+        if not admin:
+            return None
+        
+        return AdminResponse(
+            id=str(admin['_id']),
+            name=admin['name'],
+            phone=admin['phone'],
+            email=admin['email'],
+            createdAt=admin['createdAt']
+        )
+    except Exception as e:
+        logger.error(f"Error fetching admin: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.post("/registrations", response_model=RegistrationResponse)
 async def create_registration(registration: RegistrationCreate):
     try:
