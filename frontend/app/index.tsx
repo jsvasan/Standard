@@ -37,9 +37,11 @@ export default function RegistrationForm() {
   const [age, setAge] = useState('');
   const [registrantPhone, setRegistrantPhone] = useState('');
   const [bloodGroup, setBloodGroup] = useState('');
+  const [showBloodGroupPicker, setShowBloodGroupPicker] = useState(false);
   const [insurancePolicy, setInsurancePolicy] = useState('');
   const [insuranceCompany, setInsuranceCompany] = useState('');
   const [doctorName, setDoctorName] = useState('');
+  const [doctorContact, setDoctorContact] = useState('');
   const [hospitalName, setHospitalName] = useState('');
   const [hospitalNumber, setHospitalNumber] = useState('');
   const [currentAilments, setCurrentAilments] = useState('');
