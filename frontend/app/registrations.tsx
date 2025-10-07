@@ -223,7 +223,7 @@ ${formatRegistrationText(reg)}`).join('\n')}
                     <View>
                       <Text style={styles.cardDate}>{date}</Text>
                       <Text style={styles.cardSubtext}>
-                        {reg.buddies[0]?.name || 'No name'}
+                        {reg.personalInfo.registrantPhone}
                       </Text>
                     </View>
                   </View>
