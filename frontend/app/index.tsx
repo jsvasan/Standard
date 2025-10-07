@@ -115,6 +115,18 @@ export default function RegistrationForm() {
   };
 
   const validateForm = () => {
+    if (!registrantName) {
+      Alert.alert('Validation Error', 'Please enter your full name');
+      return false;
+    }
+    if (!registrantAptNumber) {
+      Alert.alert('Validation Error', 'Please enter your apartment number');
+      return false;
+    }
+    if (!dateOfBirth) {
+      Alert.alert('Validation Error', 'Please enter your date of birth');
+      return false;
+    }
     if (!registrantPhone) {
       Alert.alert('Validation Error', 'Please enter your phone number');
       return false;
@@ -136,7 +148,11 @@ export default function RegistrationForm() {
       return false;
     }
 
-    // Validate buddies
+    // Validate buddies (at least 1 required)
+    if (buddies.length < 1) {
+      Alert.alert('Validation Error', 'At least 1 buddy is required');
+      return false;
+    }
     for (let i = 0; i < buddies.length; i++) {
       const buddy = buddies[i];
       if (!buddy.name || !buddy.phone || !buddy.email || !buddy.aptNumber) {
