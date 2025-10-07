@@ -219,6 +219,8 @@ export default function RegistrationForm() {
           <TouchableOpacity
             onPress={() => router.push('/registrations')}
             style={styles.viewButton}
+            accessibilityLabel="View Registrations"
+            testID="view-registrations-button"
           >
             <Ionicons name="list" size={24} color="#007AFF" />
           </TouchableOpacity>
