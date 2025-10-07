@@ -411,6 +411,11 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#000',
   },
+  headerButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
   exportAllButton: {
     padding: 8,
   },
