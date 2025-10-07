@@ -137,18 +137,6 @@ export default function RegistrationForm() {
       Alert.alert('Validation Error', 'Please select a blood group');
       return false;
     }
-    if (!insurancePolicy || !insuranceCompany) {
-      Alert.alert('Validation Error', 'Please fill in insurance details');
-      return false;
-    }
-    if (!doctorName || !hospitalName || !hospitalNumber) {
-      Alert.alert('Validation Error', 'Please fill in doctor and hospital details');
-      return false;
-    }
-    if (!currentAilments) {
-      Alert.alert('Validation Error', 'Please describe current ailments');
-      return false;
-    }
 
     // Validate buddies (at least 1 required)
     if (buddies.length < 1) {
