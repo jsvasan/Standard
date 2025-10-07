@@ -294,6 +294,24 @@ export default function RegistrationForm() {
           </TouchableOpacity>
         </View>
 
+        {!checkingAdmin && !adminExists && (
+          <View style={styles.adminBanner}>
+            <Ionicons name="warning" size={24} color="#FF9500" />
+            <View style={styles.adminBannerContent}>
+              <Text style={styles.adminBannerTitle}>Admin Setup Required</Text>
+              <Text style={styles.adminBannerText}>
+                Please register an admin first to receive email notifications
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={styles.setupButton}
+              onPress={() => router.push('/admin-setup')}
+            >
+              <Text style={styles.setupButtonText}>Setup Now</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
           {/* Personal Info Section */}
           <View style={styles.section}>
