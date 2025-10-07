@@ -230,6 +230,10 @@ export default function RegistrationForm() {
               text: 'Submit Another',
               onPress: () => {
                 // Reset form
+                setRegistrantName('');
+                setRegistrantAptNumber('');
+                setDateOfBirth('');
+                setAge('');
                 setRegistrantPhone('');
                 setBloodGroup('');
                 setInsurancePolicy('');
@@ -239,7 +243,6 @@ export default function RegistrationForm() {
                 setHospitalNumber('');
                 setCurrentAilments('');
                 setBuddies([
-                  { name: '', phone: '', email: '', aptNumber: '' },
                   { name: '', phone: '', email: '', aptNumber: '' },
                 ]);
                 setNextOfKin([{ name: '', phone: '', email: '' }]);
