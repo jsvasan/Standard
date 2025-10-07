@@ -247,6 +247,10 @@ ${formatRegistrationText(reg)}`).join('\n')}
                     <View style={styles.infoSection}>
                       <Text style={styles.infoSectionTitle}>Personal Health</Text>
                       <View style={styles.infoRow}>
+                        <Text style={styles.infoLabel}>Phone:</Text>
+                        <Text style={styles.infoValue}>{reg.personalInfo.registrantPhone}</Text>
+                      </View>
+                      <View style={styles.infoRow}>
                         <Text style={styles.infoLabel}>Insurance Policy:</Text>
                         <Text style={styles.infoValue}>{reg.personalInfo.insurancePolicy}</Text>
                       </View>
