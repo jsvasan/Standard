@@ -28,6 +28,9 @@ api_router = APIRouter(prefix="/api")
 
 # Define Models
 class PersonalInfo(BaseModel):
+    registrantName: str
+    registrantAptNumber: str
+    dateOfBirth: str
     registrantPhone: str
     bloodGroup: str
     insurancePolicy: str
