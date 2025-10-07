@@ -84,6 +84,7 @@ export default function RegistrationsView() {
 Registration Date: ${date}
 
 ━━━ PERSONAL HEALTH INFORMATION ━━━
+Registrant Phone: ${reg.personalInfo.registrantPhone}
 Blood Group: ${reg.personalInfo.bloodGroup}
 Insurance Policy: ${reg.personalInfo.insurancePolicy}
 Insurance Company: ${reg.personalInfo.insuranceCompany}
