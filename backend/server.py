@@ -77,9 +77,9 @@ async def root():
 @api_router.post("/registrations", response_model=RegistrationResponse)
 async def create_registration(registration: RegistrationCreate):
     try:
-        # Validate buddies count
-        if len(registration.buddies) != 2:
-            raise HTTPException(status_code=400, detail="Exactly 2 buddies are required")
+        # Validate buddies count (1-2 buddies, at least 1 required)
+        if len(registration.buddies) < 1 or len(registration.buddies) > 2:
+            raise HTTPException(status_code=400, detail="Between 1 and 2 buddies are required (at least 1 is mandatory)")
         
         # Validate next of kin count
         if len(registration.nextOfKin) < 1 or len(registration.nextOfKin) > 3:
