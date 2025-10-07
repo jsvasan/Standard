@@ -751,4 +751,10 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontStyle: 'italic',
   },
+  ageDisplay: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#007AFF',
+    marginTop: 4,
+  },
 });
