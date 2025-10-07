@@ -23,6 +23,8 @@ const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
 export default function RegistrationForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [checkingAdmin, setCheckingAdmin] = useState(true);
+  const [adminExists, setAdminExists] = useState(false);
 
   // Collapsible sections state
   const [expandedSections, setExpandedSections] = useState({
@@ -30,6 +32,25 @@ export default function RegistrationForm() {
     buddies: false,
     nextOfKin: false,
   });
+
+  // Check if admin exists on mount
+  useEffect(() => {
+    checkAdminExists();
+  }, []);
+
+  const checkAdminExists = async () => {
+    try {
+      const response = await fetch(`${EXPO_PUBLIC_BACKEND_URL}/api/admin`);
+      if (response.ok) {
+        const admin = await response.json();
+        setAdminExists(!!admin);
+      }
+    } catch (error) {
+      console.error('Error checking admin:', error);
+    } finally {
+      setCheckingAdmin(false);
+    }
+  };
 
   // Personal Info State
   const [registrantName, setRegistrantName] = useState('');
