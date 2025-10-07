@@ -645,4 +645,10 @@ const styles = StyleSheet.create({
   bottomPadding: {
     height: 40,
   },
+  helperText: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 4,
+    fontStyle: 'italic',
+  },
 });
