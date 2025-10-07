@@ -135,6 +135,9 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "Created registration form with 3 collapsible sections: Personal Health Info (with blood group dropdown), Buddies (2 required), Next of Kin (1-3 dynamic). Includes form validation and success handling. Not yet tested on frontend."
+      - working: "NA"
+        agent: "main"
+        comment: "Updated form to include registrant phone number field (required, used as unique identifier). Added validation for phone number. Form now properly sends registrantPhone with personalInfo. Ready for frontend testing."
   
   - task: "Build registrations view with export functionality"
     implemented: true
