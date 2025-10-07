@@ -193,6 +193,9 @@ export default function RegistrationForm() {
     try {
       const registrationData = {
         personalInfo: {
+          registrantName,
+          registrantAptNumber,
+          dateOfBirth,
           registrantPhone,
           bloodGroup,
           insurancePolicy,
