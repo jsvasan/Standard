@@ -363,53 +363,62 @@ export default function RegistrationForm() {
                   ))}
                 </View>
 
-                <Text style={styles.label}>Insurance Policy Number *</Text>
+                <Text style={styles.label}>Insurance Policy Number</Text>
                 <TextInput
                   style={styles.input}
                   value={insurancePolicy}
                   onChangeText={setInsurancePolicy}
-                  placeholder="Enter policy number"
+                  placeholder="Enter policy number (optional)"
                   placeholderTextColor="#999"
                 />
 
-                <Text style={styles.label}>Insurance Company / EXHS Name *</Text>
+                <Text style={styles.label}>Insurance Company / ECHS, etc</Text>
                 <TextInput
                   style={styles.input}
                   value={insuranceCompany}
                   onChangeText={setInsuranceCompany}
-                  placeholder="Enter company name and address"
+                  placeholder="Enter company name and address (optional)"
                   placeholderTextColor="#999"
                   multiline
                 />
 
-                <Text style={styles.label}>Doctor Name *</Text>
+                <Text style={styles.label}>Doctor's Name</Text>
                 <TextInput
                   style={styles.input}
                   value={doctorName}
                   onChangeText={setDoctorName}
-                  placeholder="Name of doctor usually attending"
+                  placeholder="Name of doctor usually attending (optional)"
                   placeholderTextColor="#999"
                 />
 
-                <Text style={styles.label}>Hospital Name *</Text>
+                <Text style={styles.label}>Doctor's Contact</Text>
+                <TextInput
+                  style={styles.input}
+                  value={doctorContact}
+                  onChangeText={setDoctorContact}
+                  placeholder="Doctor's phone or email (optional)"
+                  placeholderTextColor="#999"
+                />
+
+                <Text style={styles.label}>Hospital Name</Text>
                 <TextInput
                   style={styles.input}
                   value={hospitalName}
                   onChangeText={setHospitalName}
-                  placeholder="Usual hospital visited"
+                  placeholder="Usual hospital visited (optional)"
                   placeholderTextColor="#999"
                 />
 
-                <Text style={styles.label}>Hospital Number *</Text>
+                <Text style={styles.label}>Hospital Registration Number</Text>
                 <TextInput
                   style={styles.input}
                   value={hospitalNumber}
                   onChangeText={setHospitalNumber}
-                  placeholder="Hospital patient number"
+                  placeholder="Hospital patient number (optional)"
                   placeholderTextColor="#999"
                 />
 
-                <Text style={styles.label}>Current Ailments *</Text>
+                <Text style={styles.label}>Current Ailments</Text>
                 <TextInput
                   style={[styles.input, styles.textArea]}
                   value={currentAilments}
