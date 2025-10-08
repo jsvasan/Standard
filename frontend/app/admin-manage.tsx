@@ -364,6 +364,9 @@ export default function AdminManage() {
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
+          {/* Copyright Header */}
+          <Text style={styles.copyrightTop}>Copyright J Srinivasan</Text>
+          
           <View style={styles.infoCard}>
             <View style={styles.cardHeader}>
               <Ionicons name="person-circle" size={40} color="#007AFF" />
