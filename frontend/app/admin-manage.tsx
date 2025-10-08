@@ -33,6 +33,14 @@ export default function AdminManage() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
   
+  // Excel download state
+  const [downloadingAll, setDownloadingAll] = useState(false);
+  const [downloadingNew, setDownloadingNew] = useState(false);
+  const [showDownloadModal, setShowDownloadModal] = useState(false);
+  const [downloadPassword, setDownloadPassword] = useState('');
+  const [downloadType, setDownloadType] = useState<'all' | 'new'>('all');
+  const [verifyingDownload, setVerifyingDownload] = useState(false);
+  
   // Additional emails state
   const [additionalEmails, setAdditionalEmails] = useState<string[]>([]);
   const [editingEmails, setEditingEmails] = useState(false);
