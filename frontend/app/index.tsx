@@ -995,16 +995,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5F5F7',
   },
   copyrightTop: {
-    fontSize: 12,
-    color: '#666',
+    fontSize: 14,
+    color: '#000',
     textAlign: 'center',
     fontStyle: 'italic',
+    fontWeight: '500',
   },
   copyrightBottom: {
-    fontSize: 12,
-    color: '#666',
+    fontSize: 14,
+    color: '#000',
     textAlign: 'center',
     marginTop: 20,
     fontStyle: 'italic',
+    fontWeight: '500',
   },
 });
