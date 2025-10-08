@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 
 # Get backend URL from frontend .env
-BACKEND_URL = "https://emergcontacts.preview.emergentagent.com/api"
+BACKEND_URL = "https://health-reg-app.preview.emergentagent.com/api"
 
 def test_create_valid_registration():
     """Test creating a valid registration with 2 buddies and 2 next of kin"""
