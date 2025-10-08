@@ -971,6 +971,118 @@ async def delete_registration_admin(registration_id: str, request: AdminRegistra
         logger.error(f"Error deleting registration: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+# Admin Excel download endpoints
+@api_router.post("/admin/download-all-excel")
+async def download_all_registrations_excel(request: AdminRegistrationDeleteRequest):
+    """Admin endpoint to download all registrations as Excel with password verification"""
+    try:
+        # Verify admin exists and password is correct
+        admin = await db.admins.find_one({})
+        if not admin:
+            raise HTTPException(status_code=404, detail="Admin not found")
+        
+        if not bcrypt.checkpw(request.password.encode('utf-8'), admin['password_hash'].encode('utf-8')):
+            raise HTTPException(status_code=401, detail="Invalid admin password")
+        
+        # Fetch all registrations
+        registrations_cursor = db.registrations.find({}).sort("createdAt", -1)
+        registrations = []
+        async for reg in registrations_cursor:
+            registrations.append(reg)
+        
+        if not registrations:
+            raise HTTPException(status_code=404, detail="No registrations found")
+        
+        # Create Excel file
+        excel_data = create_excel_from_registrations(registrations, "All_Buddy_Registrations.xlsx")
+        
+        # Update admin's last download timestamp
+        await db.admins.update_one(
+            {"_id": ObjectId(admin['_id'])},
+            {"$set": {"last_download_all": datetime.utcnow()}}
+        )
+        
+        logger.info(f"Admin downloaded all {len(registrations)} registrations as Excel")
+        
+        # Return Excel data as base64
+        excel_base64 = base64.b64encode(excel_data).decode('utf-8')
+        current_date = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f"All_Buddy_Registrations_{current_date}.xlsx"
+        
+        return {
+            "excel_data": excel_base64,
+            "filename": filename,
+            "total_registrations": len(registrations)
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error downloading all registrations: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.post("/admin/download-new-excel")
+async def download_new_registrations_excel(request: AdminRegistrationDeleteRequest):
+    """Admin endpoint to download only new/updated registrations since last download"""
+    try:
+        # Verify admin exists and password is correct
+        admin = await db.admins.find_one({})
+        if not admin:
+            raise HTTPException(status_code=404, detail="Admin not found")
+        
+        if not bcrypt.checkpw(request.password.encode('utf-8'), admin['password_hash'].encode('utf-8')):
+            raise HTTPException(status_code=401, detail="Invalid admin password")
+        
+        # Get last download timestamp
+        last_download = admin.get('last_download_all', datetime.min)
+        
+        # Fetch registrations created/updated after last download
+        registrations_cursor = db.registrations.find({
+            "$or": [
+                {"createdAt": {"$gt": last_download}},
+                {"updatedAt": {"$gt": last_download}}
+            ]
+        }).sort("createdAt", -1)
+        
+        registrations = []
+        async for reg in registrations_cursor:
+            registrations.append(reg)
+        
+        if not registrations:
+            return {
+                "message": "No new registrations since last download",
+                "total_new": 0
+            }
+        
+        # Create Excel file
+        excel_data = create_excel_from_registrations(registrations, "New_Buddy_Registrations.xlsx")
+        
+        # Update admin's last download timestamp
+        await db.admins.update_one(
+            {"_id": ObjectId(admin['_id'])},
+            {"$set": {"last_download_new": datetime.utcnow()}}
+        )
+        
+        logger.info(f"Admin downloaded {len(registrations)} new registrations as Excel")
+        
+        # Return Excel data as base64
+        excel_base64 = base64.b64encode(excel_data).decode('utf-8')
+        current_date = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f"New_Buddy_Registrations_{current_date}.xlsx"
+        
+        return {
+            "excel_data": excel_base64,
+            "filename": filename,
+            "total_new": len(registrations),
+            "since_date": last_download.strftime('%d/%m/%Y %H:%M:%S')
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error downloading new registrations: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Include the router in the main app
 app.include_router(api_router)
 
