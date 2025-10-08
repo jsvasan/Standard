@@ -182,6 +182,45 @@ export default function RegistrationForm() {
     }
   };
 
+  const handleRegistrationsAccess = () => {
+    if (!adminExists) {
+      showAlert('Access Denied', 'No admin account exists. Please set up an admin first.');
+      return;
+    }
+    setShowAdminModal(true);
+  };
+
+  const verifyAdminPassword = async () => {
+    if (!adminPassword.trim()) {
+      showAlert('Error', 'Please enter admin password');
+      return;
+    }
+
+    setVerifyingAdmin(true);
+    try {
+      const response = await fetch(`${EXPO_PUBLIC_BACKEND_URL}/api/admin/verify-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password: adminPassword }),
+      });
+
+      if (response.ok) {
+        setShowAdminModal(false);
+        setAdminPassword('');
+        router.push('/registrations');
+      } else {
+        showAlert('Access Denied', 'Invalid admin password');
+      }
+    } catch (error) {
+      showAlert('Error', 'Network error. Please check your connection.');
+      console.error('Admin verification error:', error);
+    } finally {
+      setVerifyingAdmin(false);
+    }
+  };
+
   const validateForm = () => {
     if (!registrantName) {
       showAlert('Validation Error', 'Please enter your full name');
