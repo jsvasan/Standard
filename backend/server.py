@@ -414,6 +414,9 @@ class NextOfKin(BaseModel):
     name: str
     phone: str
     email: EmailStr
+    country: Optional[str] = "INDIA"
+    city: Optional[str] = "Bangalore"
+    address: Optional[str] = ""
 
 class Registration(BaseModel):
     personalInfo: PersonalInfo
