@@ -281,6 +281,122 @@ export default function AdminManage() {
             </View>
           </View>
 
+          <View style={styles.emailsCard}>
+            <View style={styles.emailsHeader}>
+              <Ionicons name="mail" size={24} color="#007AFF" />
+              <Text style={styles.emailsTitle}>Additional Email Recipients</Text>
+            </View>
+            
+            <Text style={styles.emailsDescription}>
+              Add up to 2 additional email addresses to receive registration notifications
+            </Text>
+
+            {!editingEmails ? (
+              <View>
+                {additionalEmails && additionalEmails.length > 0 ? (
+                  <View style={styles.currentEmailsList}>
+                    {additionalEmails.map((email, index) => (
+                      <View key={index} style={styles.emailItem}>
+                        <Ionicons name="mail-outline" size={18} color="#007AFF" />
+                        <Text style={styles.emailText}>{email}</Text>
+                      </View>
+                    ))}
+                  </View>
+                ) : (
+                  <Text style={styles.noEmailsText}>No additional emails configured</Text>
+                )}
+                
+                <TouchableOpacity
+                  style={styles.editEmailsButton}
+                  onPress={() => setEditingEmails(true)}
+                >
+                  <Ionicons name="create-outline" size={20} color="#007AFF" />
+                  <Text style={styles.editEmailsButtonText}>
+                    {additionalEmails && additionalEmails.length > 0 ? 'Edit Emails' : 'Add Emails'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={styles.editEmailsSection}>
+                {additionalEmails.map((email, index) => (
+                  <View key={index} style={styles.emailInputRow}>
+                    <TextInput
+                      style={[styles.input, styles.emailInput]}
+                      value={email}
+                      onChangeText={(value) => updateEmailAtIndex(index, value)}
+                      placeholder={`Email ${index + 1} (optional)`}
+                      placeholderTextColor="#999"
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                    />
+                    {additionalEmails.length > 1 && (
+                      <TouchableOpacity
+                        onPress={() => removeEmailField(index)}
+                        style={styles.removeButton}
+                      >
+                        <Ionicons name="close-circle" size={24} color="#FF3B30" />
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                ))}
+
+                {additionalEmails.length < 2 && (
+                  <TouchableOpacity
+                    style={styles.addEmailButton}
+                    onPress={addEmailField}
+                  >
+                    <Ionicons name="add-circle-outline" size={20} color="#007AFF" />
+                    <Text style={styles.addEmailButtonText}>Add Another Email</Text>
+                  </TouchableOpacity>
+                )}
+
+                <Text style={styles.label}>Enter Your Password to Confirm *</Text>
+                <TextInput
+                  style={styles.input}
+                  value={emailPassword}
+                  onChangeText={setEmailPassword}
+                  placeholder="Enter admin password"
+                  placeholderTextColor="#999"
+                  secureTextEntry
+                  autoCapitalize="none"
+                />
+
+                <View style={styles.buttonRow}>
+                  <TouchableOpacity
+                    style={styles.cancelButton}
+                    onPress={() => {
+                      setEditingEmails(false);
+                      setEmailPassword('');
+                      // Restore original emails
+                      if (admin?.additional_emails) {
+                        setAdditionalEmails(admin.additional_emails);
+                      } else {
+                        setAdditionalEmails([]);
+                      }
+                    }}
+                  >
+                    <Text style={styles.cancelButtonText}>Cancel</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={[styles.saveEmailsButton, savingEmails && styles.saveEmailsButtonDisabled]}
+                    onPress={handleSaveAdditionalEmails}
+                    disabled={savingEmails}
+                  >
+                    {savingEmails ? (
+                      <ActivityIndicator color="#fff" />
+                    ) : (
+                      <>
+                        <Ionicons name="checkmark-circle" size={18} color="#fff" />
+                        <Text style={styles.saveEmailsButtonText}>Save Emails</Text>
+                      </>
+                    )}
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+          </View>
+
           <View style={styles.warningCard}>
             <View style={styles.warningHeader}>
               <Ionicons name="warning" size={24} color="#FF9500" />
