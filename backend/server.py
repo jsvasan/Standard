@@ -734,6 +734,14 @@ async def update_registration_admin(registration_id: str, request: AdminRegistra
             createdAt=updated_reg['createdAt']
         )
         
+        # Send email notifications for the update
+        try:
+            await send_email_notification(updated_reg, is_update=True)
+            logger.info(f"Update notification emails sent for registration {registration_id}")
+        except Exception as email_error:
+            logger.error(f"Failed to send update notification emails: {str(email_error)}")
+            # Don't fail the whole request if email fails
+        
         logger.info(f"Admin updated registration {registration_id}")
         return response_data
         
