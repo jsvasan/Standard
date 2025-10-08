@@ -299,12 +299,13 @@ export default function RegistrationForm() {
             },
           ]
         );
+        }
       } else {
         const error = await response.json();
-        Alert.alert('Error', error.detail || 'Failed to submit registration');
+        showAlert('Error', error.detail || 'Failed to submit registration');
       }
     } catch (error) {
-      Alert.alert('Error', 'Network error. Please check your connection.');
+      showAlert('Error', 'Network error. Please check your connection.');
       console.error(error);
     } finally {
       setLoading(false);
