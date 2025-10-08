@@ -29,6 +29,7 @@ export default function AdminManage() {
   const [loading, setLoading] = useState(true);
   const [admin, setAdmin] = useState<Admin | null>(null);
   const [confirmEmail, setConfirmEmail] = useState('');
+  const [deletePassword, setDeletePassword] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
   
