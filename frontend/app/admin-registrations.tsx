@@ -258,7 +258,7 @@ export default function AdminRegistrations() {
     if (editFormData.nextOfKin.length < 3) {
       setEditFormData(prev => ({
         ...prev,
-        nextOfKin: [...prev.nextOfKin, { name: '', phone: '', email: '' }],
+        nextOfKin: [...prev.nextOfKin, { name: '', phone: '', email: '', country: 'INDIA', city: 'Bangalore', address: '' }],
       }));
     }
   };
