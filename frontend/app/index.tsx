@@ -777,6 +777,60 @@ export default function RegistrationForm() {
           <View style={styles.bottomPadding} />
         </ScrollView>
       </KeyboardAvoidingView>
+
+      {/* Admin Password Verification Modal */}
+      <Modal
+        visible={showAdminModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => {
+          setShowAdminModal(false);
+          setAdminPassword('');
+        }}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Admin Access Required</Text>
+            <Text style={styles.modalMessage}>
+              Please enter your admin password to view registrations:
+            </Text>
+            
+            <TextInput
+              style={styles.passwordInput}
+              value={adminPassword}
+              onChangeText={setAdminPassword}
+              placeholder="Enter admin password"
+              placeholderTextColor="#999"
+              secureTextEntry={true}
+              autoCapitalize="none"
+            />
+            
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => {
+                  setShowAdminModal(false);
+                  setAdminPassword('');
+                }}
+              >
+                <Text style={styles.cancelButtonText}>Cancel</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity
+                style={[styles.confirmButton, verifyingAdmin && styles.disabledButton]}
+                onPress={verifyAdminPassword}
+                disabled={verifyingAdmin}
+              >
+                {verifyingAdmin ? (
+                  <ActivityIndicator size="small" color="#FFF" />
+                ) : (
+                  <Text style={styles.confirmButtonText}>Access</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
