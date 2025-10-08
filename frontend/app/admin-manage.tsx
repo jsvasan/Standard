@@ -516,10 +516,10 @@ export default function AdminManage() {
             </View>
           </View>
 
-          <View style={[styles.excelDownloadCard, {borderWidth: 2, borderColor: '#FF0000'}]}>
+          <View style={styles.excelDownloadCard}>
             <View style={styles.cardHeader}>
               <Ionicons name="document-text" size={24} color="#28A745" />
-              <Text style={styles.cardTitle}>Excel Reports (MOVED HERE)</Text>
+              <Text style={styles.cardTitle}>Excel Reports</Text>
             </View>
             
             <Text style={styles.excelDescription}>
