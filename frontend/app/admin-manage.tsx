@@ -652,10 +652,10 @@ export default function AdminManage() {
             </TouchableOpacity>
           </View>
 
-          <View style={styles.excelDownloadCard}>
+          <View style={[styles.excelDownloadCard, {borderWidth: 2, borderColor: '#FF0000'}]}>
             <View style={styles.cardHeader}>
               <Ionicons name="document-text" size={24} color="#28A745" />
-              <Text style={styles.cardTitle}>Excel Reports</Text>
+              <Text style={styles.cardTitle}>Excel Reports (DEBUG)</Text>
             </View>
             
             <Text style={styles.excelDescription}>
