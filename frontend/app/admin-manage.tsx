@@ -671,7 +671,7 @@ export default function AdminManage() {
                 ) : (
                   <>
                     <Ionicons name="download" size={20} color="#FFF" />
-                    <Text style={styles.downloadAllButtonText}>Download All</Text>
+                    <Text style={styles.downloadAllButtonText}>Entire Registrations</Text>
                   </>
                 )}
               </TouchableOpacity>
