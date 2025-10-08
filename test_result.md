@@ -184,16 +184,19 @@ test_plan:
   test_priority: "high_first"
 
   - task: "Create admin registration management (edit/delete with password verification)"
-    implemented: false
+    implemented: true
     working: "NA"
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
         comment: "New user requirement: Admin should be able to edit and delete registrations with password verification. Need to implement PUT /api/registrations/{id} and DELETE /api/registrations/{id} with admin password verification, plus frontend admin interface."
+      - working: "NA"
+        agent: "main"
+        comment: "BACKEND IMPLEMENTED: Added PUT /api/registrations/{id} and DELETE /api/registrations/{id} endpoints with admin password verification. Both endpoints validate admin exists, verify password with bcrypt, validate registration ID, and perform appropriate CRUD operations. Includes proper validation for buddies (1-2) and next of kin (1-3). Ready for backend testing."
 
 agent_communication:
   - agent: "main"
