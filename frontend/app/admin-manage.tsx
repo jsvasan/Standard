@@ -1062,17 +1062,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   copyrightTop: {
-    fontSize: 12,
-    color: '#666',
+    fontSize: 14,
+    color: '#000',
     textAlign: 'center',
     marginBottom: 20,
     fontStyle: 'italic',
+    fontWeight: '500',
   },
   copyrightBottom: {
-    fontSize: 12,
-    color: '#666',
+    fontSize: 14,
+    color: '#000',
     textAlign: 'center',
     marginTop: 20,
     fontStyle: 'italic',
+    fontWeight: '500',
   },
 });
