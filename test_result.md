@@ -201,6 +201,9 @@ test_plan:
         agent: "main"
         comment: "COMPLETE FEATURE IMPLEMENTED: Backend API testing successful! All 12 scenarios passed including password verification, data validation, error handling. Created comprehensive frontend admin-registrations.tsx with password verification modal, edit/delete buttons, full CRUD interface. Added 'Manage Registrations' navigation button in admin-manage.tsx. Feature fully functional - admin can now edit and delete any registration with password verification."
       - working: true
+        agent: "main"
+        comment: "BACK BUTTON FIX: Fixed back button in admin-registrations.tsx screen. Issue was missing proper header layout and styling. Added proper TouchableOpacity styling, fixed header justifyContent, added fallback navigation, and error handling with console logging. Back button now works correctly with proper touch area and navigation."
+      - working: true
         agent: "testing"
         comment: "COMPREHENSIVE BACKEND TESTING COMPLETED SUCCESSFULLY: ✅ PUT /api/registrations/{id} working perfectly with valid admin password verification (bcrypt), correctly updates registration data including personal info, buddies (1-2), and next of kin (1-3). ✅ PUT endpoint correctly rejects invalid admin password (401), invalid registration ID (400), and invalid data structures with too many buddies/next of kin (400). ✅ DELETE /api/registrations/{id} working perfectly with valid admin password verification, successfully deletes registrations. ✅ DELETE endpoint correctly rejects invalid admin password (401), invalid registration ID (400), and non-existent registration ID (404). ✅ Password verification with bcrypt working correctly. ✅ All validation scenarios tested and working as expected. Admin registration management backend is fully functional and secure."
 
