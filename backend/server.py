@@ -338,6 +338,7 @@ class AdminResponse(BaseModel):
     name: str
     phone: str
     email: str
+    additional_emails: List[str] = []
     createdAt: datetime
 
 class AdminDeleteRequest(BaseModel):
