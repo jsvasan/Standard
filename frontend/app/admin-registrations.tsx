@@ -44,6 +44,9 @@ interface NextOfKin {
   name: string;
   phone: string;
   email: string;
+  country?: string;
+  city?: string;
+  address?: string;
 }
 
 interface Registration {
