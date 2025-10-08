@@ -279,7 +279,19 @@ export default function AdminRegistrations() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+        <TouchableOpacity 
+          onPress={() => {
+            console.log('Back button pressed');
+            try {
+              router.back();
+            } catch (error) {
+              console.error('Router back error:', error);
+              router.push('/admin-manage');
+            }
+          }} 
+          style={styles.backButton}
+          testID="back-button"
+        >
           <Ionicons name="arrow-back" size={24} color="#007AFF" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Admin: Manage Registrations</Text>
