@@ -87,8 +87,20 @@ export default function RegistrationForm() {
 
   const calculateAge = (dob: string) => {
     if (!dob) return '';
-    const birthDate = new Date(dob);
+    
+    // Parse DD/MM/YYYY format
+    const parts = dob.split('/');
+    if (parts.length !== 3) return '';
+    
+    const day = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1; // Month is 0-indexed
+    const year = parseInt(parts[2], 10);
+    
+    if (isNaN(day) || isNaN(month) || isNaN(year)) return '';
+    
+    const birthDate = new Date(year, month, day);
     const today = new Date();
+    
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
@@ -97,9 +109,28 @@ export default function RegistrationForm() {
     return age.toString();
   };
 
-  const handleDateOfBirthChange = (dob: string) => {
-    setDateOfBirth(dob);
-    setAge(calculateAge(dob));
+  const handleDateOfBirthChange = (input: string) => {
+    // Allow only numbers and slashes
+    const cleaned = input.replace(/[^\d/]/g, '');
+    
+    // Auto-format as DD/MM/YYYY
+    let formatted = cleaned;
+    if (cleaned.length >= 2 && !cleaned.includes('/')) {
+      formatted = cleaned.slice(0, 2) + '/' + cleaned.slice(2);
+    }
+    if (cleaned.length >= 5 && cleaned.split('/').length === 2) {
+      const parts = cleaned.split('/');
+      formatted = parts[0] + '/' + parts[1].slice(0, 2) + '/' + parts[1].slice(2);
+    }
+    
+    setDateOfBirth(formatted);
+    
+    // Calculate age if format is complete (DD/MM/YYYY)
+    if (formatted.length === 10) {
+      setAge(calculateAge(formatted));
+    } else {
+      setAge('');
+    }
   };
 
   const updateBuddy = (index: number, field: string, value: string) => {
