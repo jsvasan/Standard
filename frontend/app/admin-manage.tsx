@@ -1402,4 +1402,8 @@ const styles = StyleSheet.create({
   disabledButton: {
     backgroundColor: '#CCC',
   },
+  homeButton: {
+    padding: 8,
+    width: 40,
+  },
 });
