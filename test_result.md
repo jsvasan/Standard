@@ -122,6 +122,9 @@ backend:
       - working: true
         agent: "main"
         comment: "Updated backend to support unique registration per phone number. Added registrantPhone field to PersonalInfo model. Modified POST endpoint to check for existing registration by phone and update if exists, or create new if not. This ensures only one registration per person using phone as unique key."
+      - working: true
+        agent: "main" 
+        comment: "Fixed frontend submission feedback logic - completed broken handleSubmit function with proper web/mobile Alert handling and form reset functionality. Backend already returns is_update field correctly."
 
 frontend:
   - task: "Build registration form with collapsible sections"
