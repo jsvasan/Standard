@@ -782,6 +782,60 @@ export default function AdminManage() {
           <View style={styles.bottomPadding} />
         </View>
       </ScrollView>
+
+      {/* Download Password Modal */}
+      <Modal
+        visible={showDownloadModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => {
+          setShowDownloadModal(false);
+          setDownloadPassword('');
+        }}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Download Excel File</Text>
+            <Text style={styles.modalMessage}>
+              Enter your admin password to download {downloadType === 'all' ? 'all registrations' : 'new registrations only'}:
+            </Text>
+            
+            <TextInput
+              style={styles.passwordInput}
+              value={downloadPassword}
+              onChangeText={setDownloadPassword}
+              placeholder="Enter admin password"
+              placeholderTextColor="#999"
+              secureTextEntry={true}
+              autoCapitalize="none"
+            />
+            
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() => {
+                  setShowDownloadModal(false);
+                  setDownloadPassword('');
+                }}
+              >
+                <Text style={styles.cancelButtonText}>Cancel</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity
+                style={[styles.confirmButton, verifyingDownload && styles.disabledButton]}
+                onPress={performDownload}
+                disabled={verifyingDownload}
+              >
+                {verifyingDownload ? (
+                  <ActivityIndicator size="small" color="#FFF" />
+                ) : (
+                  <Text style={styles.confirmButtonText}>Download</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
