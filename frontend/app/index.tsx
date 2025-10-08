@@ -164,7 +164,7 @@ export default function RegistrationForm() {
 
   const addNextOfKin = () => {
     if (nextOfKin.length < 3) {
-      setNextOfKin([...nextOfKin, { name: '', phone: '', email: '' }]);
+      setNextOfKin([...nextOfKin, { name: '', phone: '', email: '', country: 'INDIA', city: 'Bangalore', address: '' }]);
     }
   };
 
