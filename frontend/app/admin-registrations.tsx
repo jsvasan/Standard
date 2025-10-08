@@ -409,6 +409,13 @@ export default function AdminRegistrations() {
                           <Text style={styles.buddyText}>{kin.name}</Text>
                           <Text style={styles.buddyText}>{kin.phone}</Text>
                           <Text style={styles.buddyText}>{kin.email}</Text>
+                          {(kin.country || kin.city || kin.address) && (
+                            <View style={{marginTop: 8, paddingTop: 8, borderTopWidth: 1, borderTopColor: '#E5E7EB'}}>
+                              {kin.country && <Text style={styles.buddyText}>Country: {kin.country}</Text>}
+                              {kin.city && <Text style={styles.buddyText}>City: {kin.city}</Text>}
+                              {kin.address && <Text style={styles.buddyText}>Address: {kin.address}</Text>}
+                            </View>
+                          )}
                         </View>
                       ))}
                     </View>
