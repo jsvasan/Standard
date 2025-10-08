@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Backend API Testing for Health Registration App
-Tests all API endpoints with various validation scenarios
+Focus: Testing registration submission API with is_update field and unique phone constraint
 """
 
 import requests
@@ -11,6 +11,211 @@ from datetime import datetime
 
 # Get backend URL from frontend .env
 BACKEND_URL = "https://health-reg-app.preview.emergentagent.com/api"
+
+def test_registration_submission_flow():
+    """Test the complete registration submission flow with is_update field"""
+    print("\n" + "="*70)
+    print("TESTING REGISTRATION SUBMISSION API - FOCUS ON is_update FIELD")
+    print("="*70)
+    
+    # Test data for new registration with realistic data
+    new_registration_data = {
+        "personalInfo": {
+            "registrantName": "Dr. Amanda Rodriguez",
+            "registrantAptNumber": "Tower-B 1205",
+            "dateOfBirth": "22/08/1978",
+            "registrantPhone": "+91-9876543210",
+            "bloodGroup": "B+",
+            "insurancePolicy": "HDFC-ERGO-789456123",
+            "insuranceCompany": "HDFC ERGO Health Insurance",
+            "doctorName": "Dr. Rajesh Kumar",
+            "doctorContact": "+91-9123456789",
+            "hospitalName": "Apollo Hospitals",
+            "hospitalNumber": "APL-REG-456789",
+            "currentAilments": "Mild hypertension, Vitamin D deficiency"
+        },
+        "buddies": [
+            {
+                "name": "Priya Sharma",
+                "phone": "+91-9876543211",
+                "email": "priya.sharma@gmail.com",
+                "aptNumber": "Tower-A 804"
+            },
+            {
+                "name": "Vikram Singh",
+                "phone": "+91-9876543212",
+                "email": "vikram.singh@outlook.com",
+                "aptNumber": "Tower-C 1102"
+            }
+        ],
+        "nextOfKin": [
+            {
+                "name": "Carlos Rodriguez",
+                "phone": "+91-9876543213",
+                "email": "carlos.rodriguez@yahoo.com"
+            },
+            {
+                "name": "Maria Rodriguez",
+                "phone": "+91-9876543214",
+                "email": "maria.rodriguez@gmail.com"
+            },
+            {
+                "name": "Sofia Rodriguez",
+                "phone": "+91-9876543215",
+                "email": "sofia.rodriguez@hotmail.com"
+            }
+        ]
+    }
+    
+    # Test 1: Create NEW registration
+    print("\n1. Testing NEW registration creation...")
+    print(f"Phone number: {new_registration_data['personalInfo']['registrantPhone']}")
+    
+    try:
+        response = requests.post(f"{BACKEND_URL}/registrations", 
+                               json=new_registration_data,
+                               headers={"Content-Type": "application/json"},
+                               timeout=15)
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            print("✅ NEW registration created successfully")
+            print(f"Registration ID: {data.get('id')}")
+            print(f"Registrant Name: {data.get('personalInfo', {}).get('registrantName')}")
+            print(f"Phone: {data.get('personalInfo', {}).get('registrantPhone')}")
+            
+            # CRITICAL CHECK: is_update field
+            is_update = data.get('is_update')
+            print(f"is_update field: {is_update}")
+            
+            if is_update is not None:
+                if is_update == False:
+                    print("✅ PASS: is_update correctly set to False for NEW registration")
+                else:
+                    print(f"❌ FAIL: is_update should be False for NEW registration, got: {is_update}")
+                    return False
+            else:
+                print("❌ CRITICAL FAIL: is_update field MISSING from response")
+                return False
+            
+            registration_id = data.get('id')
+            
+        else:
+            print(f"❌ FAIL: Failed to create registration")
+            print(f"Response: {response.text}")
+            return False
+            
+    except Exception as e:
+        print(f"❌ ERROR: Exception during new registration: {e}")
+        return False
+    
+    # Test 2: Update EXISTING registration (same phone number)
+    print("\n2. Testing EXISTING registration update (same phone)...")
+    
+    # Modify some data for the update
+    update_registration_data = new_registration_data.copy()
+    update_registration_data["personalInfo"]["registrantName"] = "Dr. Amanda Rodriguez-Patel"
+    update_registration_data["personalInfo"]["currentAilments"] = "Mild hypertension, Vitamin D deficiency, Recent knee injury"
+    update_registration_data["personalInfo"]["doctorName"] = "Dr. Rajesh Kumar (Orthopedic Specialist)"
+    update_registration_data["buddies"][0]["name"] = "Priya Sharma-Gupta"
+    
+    try:
+        response = requests.post(f"{BACKEND_URL}/registrations", 
+                               json=update_registration_data,
+                               headers={"Content-Type": "application/json"},
+                               timeout=15)
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            print("✅ EXISTING registration updated successfully")
+            print(f"Registration ID: {data.get('id')}")
+            print(f"Updated Name: {data.get('personalInfo', {}).get('registrantName')}")
+            print(f"Phone: {data.get('personalInfo', {}).get('registrantPhone')}")
+            
+            # CRITICAL CHECK: is_update field
+            is_update = data.get('is_update')
+            print(f"is_update field: {is_update}")
+            
+            if is_update is not None:
+                if is_update == True:
+                    print("✅ PASS: is_update correctly set to True for EXISTING registration update")
+                else:
+                    print(f"❌ FAIL: is_update should be True for EXISTING registration update, got: {is_update}")
+                    return False
+            else:
+                print("❌ CRITICAL FAIL: is_update field MISSING from response")
+                return False
+            
+            # Verify the data was actually updated
+            if data.get('personalInfo', {}).get('registrantName') == "Dr. Amanda Rodriguez-Patel":
+                print("✅ PASS: Registration data successfully updated")
+            else:
+                print("❌ FAIL: Registration data was not updated properly")
+                return False
+                
+        else:
+            print(f"❌ FAIL: Failed to update registration")
+            print(f"Response: {response.text}")
+            return False
+            
+    except Exception as e:
+        print(f"❌ ERROR: Exception during registration update: {e}")
+        return False
+    
+    # Test 3: Create NEW registration with different phone number
+    print("\n3. Testing NEW registration with different phone number...")
+    
+    different_phone_data = new_registration_data.copy()
+    different_phone_data["personalInfo"]["registrantPhone"] = "+91-8765432109"
+    different_phone_data["personalInfo"]["registrantName"] = "Mr. Arjun Mehta"
+    different_phone_data["personalInfo"]["bloodGroup"] = "A+"
+    different_phone_data["buddies"][0]["name"] = "Neha Agarwal"
+    different_phone_data["buddies"][1]["name"] = "Rohit Verma"
+    
+    try:
+        response = requests.post(f"{BACKEND_URL}/registrations", 
+                               json=different_phone_data,
+                               headers={"Content-Type": "application/json"},
+                               timeout=15)
+        
+        print(f"Status Code: {response.status_code}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            print("✅ NEW registration with different phone created successfully")
+            print(f"Registration ID: {data.get('id')}")
+            print(f"Name: {data.get('personalInfo', {}).get('registrantName')}")
+            print(f"Phone: {data.get('personalInfo', {}).get('registrantPhone')}")
+            
+            # CRITICAL CHECK: is_update field
+            is_update = data.get('is_update')
+            print(f"is_update field: {is_update}")
+            
+            if is_update is not None:
+                if is_update == False:
+                    print("✅ PASS: is_update correctly set to False for NEW registration with different phone")
+                else:
+                    print(f"❌ FAIL: is_update should be False for NEW registration, got: {is_update}")
+                    return False
+            else:
+                print("❌ CRITICAL FAIL: is_update field MISSING from response")
+                return False
+                
+        else:
+            print(f"❌ FAIL: Failed to create registration with different phone")
+            print(f"Response: {response.text}")
+            return False
+            
+    except Exception as e:
+        print(f"❌ ERROR: Exception during different phone registration: {e}")
+        return False
+    
+    print("\n✅ ALL REGISTRATION SUBMISSION TESTS PASSED")
+    return True
 
 def test_create_valid_registration():
     """Test creating a valid registration with 2 buddies and 2 next of kin"""
