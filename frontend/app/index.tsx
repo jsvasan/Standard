@@ -724,6 +724,9 @@ export default function RegistrationForm() {
             )}
           </TouchableOpacity>
 
+          {/* Bottom Copyright */}
+          <Text style={styles.copyrightBottom}>Developed by JS with AI Coding App</Text>
+
           <View style={styles.bottomPadding} />
         </ScrollView>
       </KeyboardAvoidingView>
