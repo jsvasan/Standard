@@ -535,7 +535,7 @@ def create_excel_from_registrations(registrations_list: List[dict], filename: st
             else:
                 row_data.extend(['', '', '', ''])
         
-        # Next of Kin (up to 3)
+        # Next of Kin (up to 3) with address fields
         for i in range(3):
             if i < len(next_of_kin):
                 kin = next_of_kin[i]
@@ -543,9 +543,12 @@ def create_excel_from_registrations(registrations_list: List[dict], filename: st
                     kin.get('name', ''),
                     kin.get('phone', ''),
                     kin.get('email', ''),
+                    kin.get('country', 'INDIA'),
+                    kin.get('city', 'Bangalore'),
+                    kin.get('address', ''),
                 ])
             else:
-                row_data.extend(['', '', ''])
+                row_data.extend(['', '', '', '', '', ''])
         
         # Add data to row
         for col, value in enumerate(row_data, 1):
