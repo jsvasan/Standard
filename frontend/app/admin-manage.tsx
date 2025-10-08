@@ -37,6 +37,7 @@ export default function AdminManage() {
   const [additionalEmails, setAdditionalEmails] = useState<string[]>([]);
   const [editingEmails, setEditingEmails] = useState(false);
   const [savingEmails, setSavingEmails] = useState(false);
+  const [emailPassword, setEmailPassword] = useState('');
 
   useEffect(() => {
     fetchAdmin();
