@@ -348,6 +348,15 @@ class AdminDeleteRequest(BaseModel):
     email: str
     password: str
 
+class AdminRegistrationUpdateRequest(BaseModel):
+    password: str
+    personalInfo: dict
+    buddies: List[dict]
+    nextOfKin: List[dict]
+
+class AdminRegistrationDeleteRequest(BaseModel):
+    password: str
+
 class PersonalInfo(BaseModel):
     registrantName: str
     registrantAptNumber: str
