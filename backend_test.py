@@ -1,16 +1,34 @@
 #!/usr/bin/env python3
 """
-Backend API Testing for Admin Registration Management
-Tests the new PUT and DELETE endpoints for admin registration management
+Backend Email Notification Testing
+Focus: Test email notification system with updated Gmail App Password
 """
 
-import requests
+import asyncio
+import aiohttp
 import json
+import os
 import sys
 from datetime import datetime
+import logging
 
-# Get backend URL from frontend .env
-BACKEND_URL = "https://health-reg-app.preview.emergentagent.com/api"
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+# Get backend URL from frontend env
+def get_backend_url():
+    try:
+        with open('/app/frontend/.env', 'r') as f:
+            for line in f:
+                if line.startswith('EXPO_PUBLIC_BACKEND_URL='):
+                    return line.split('=', 1)[1].strip()
+    except Exception as e:
+        logger.error(f"Could not read frontend .env file: {e}")
+    return "http://localhost:8001"
+
+BACKEND_URL = get_backend_url()
+API_BASE = f"{BACKEND_URL}/api"
 
 def test_admin_registration_management():
     """Test admin registration management endpoints"""
