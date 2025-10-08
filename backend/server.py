@@ -610,7 +610,11 @@ async def create_registration(registration: RegistrationCreate):
                 for email in admin['additional_emails']:
                     await send_email_notification(email, reg_dict)
         
-        return response_data
+        # Add update flag to response
+        response_dict = response_data.dict()
+        response_dict['is_update'] = is_update
+        
+        return response_dict
     except HTTPException:
         raise
     except Exception as e:
