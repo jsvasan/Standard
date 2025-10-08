@@ -271,11 +271,13 @@ export default function AdminManage() {
 
   const handleDownloadAll = () => {
     setDownloadType('all');
+    setDownloadingAll(false); // Reset loading state
     setShowDownloadModal(true);
   };
 
   const handleDownloadNew = () => {
     setDownloadType('new');
+    setDownloadingNew(false); // Reset loading state
     setShowDownloadModal(true);
   };
 
