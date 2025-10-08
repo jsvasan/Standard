@@ -718,6 +718,35 @@ export default function AdminRegistrations() {
                   keyboardType="email-address"
                   autoCapitalize="none"
                 />
+
+                {/* Address Section */}
+                <Text style={styles.addressSectionTitle}>Address (Optional)</Text>
+                
+                <TextInput
+                  style={styles.editInput}
+                  value={kin.country || 'INDIA'}
+                  onChangeText={(value) => updateNextOfKin(index, 'country', value)}
+                  placeholder="Country"
+                  placeholderTextColor="#999"
+                />
+
+                <TextInput
+                  style={styles.editInput}
+                  value={kin.city || 'Bangalore'}
+                  onChangeText={(value) => updateNextOfKin(index, 'city', value)}
+                  placeholder="City"
+                  placeholderTextColor="#999"
+                />
+
+                <TextInput
+                  style={[styles.editInput, styles.multilineInput]}
+                  value={kin.address || ''}
+                  onChangeText={(value) => updateNextOfKin(index, 'address', value)}
+                  placeholder="Enter complete address"
+                  placeholderTextColor="#999"
+                  multiline
+                  numberOfLines={3}
+                />
               </View>
             ))}
             
