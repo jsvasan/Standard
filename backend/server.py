@@ -477,14 +477,23 @@ async def delete_admin(request: AdminDeleteRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.put("/admin/additional-emails")
-async def update_additional_emails(emails: dict):
+async def update_additional_emails(request: dict):
     try:
         admin = await db.admins.find_one({})
         
         if not admin:
             raise HTTPException(status_code=404, detail="Admin not found")
         
-        additional_emails = emails.get("additional_emails", [])
+        # Verify password
+        password = request.get("password")
+        if not password:
+            raise HTTPException(status_code=400, detail="Password is required")
+        
+        if 'password_hash' in admin:
+            if not bcrypt.checkpw(password.encode('utf-8'), admin['password_hash'].encode('utf-8')):
+                raise HTTPException(status_code=401, detail="Incorrect password")
+        
+        additional_emails = request.get("additional_emails", [])
         
         # Validate max 2 emails
         if len(additional_emails) > 2:
