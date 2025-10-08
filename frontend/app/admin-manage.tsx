@@ -1061,4 +1061,18 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     flex: 1,
   },
+  copyrightTop: {
+    fontSize: 12,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 20,
+    fontStyle: 'italic',
+  },
+  copyrightBottom: {
+    fontSize: 12,
+    color: '#666',
+    textAlign: 'center',
+    marginTop: 20,
+    fontStyle: 'italic',
+  },
 });
