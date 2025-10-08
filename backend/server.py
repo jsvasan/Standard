@@ -314,6 +314,7 @@ class Admin(BaseModel):
     phone: str
     email: EmailStr
     password_hash: str
+    additional_emails: List[str] = []
     createdAt: datetime = Field(default_factory=datetime.utcnow)
 
 class AdminCreate(BaseModel):
