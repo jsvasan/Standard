@@ -241,10 +241,20 @@ async def send_admin_confirmation_email(admin_data: dict, plain_password: str):
                             <td style="padding: 8px 0; color: #000;">{admin_data['email']}</td>
                         </tr>
                         <tr>
+                            <td style="padding: 8px 0; font-weight: bold; color: #666;">Password:</td>
+                            <td style="padding: 8px 0; color: #000; font-family: monospace; background: #f0f0f0; padding: 10px !important; border-radius: 4px;">{plain_password}</td>
+                        </tr>
+                        <tr>
                             <td style="padding: 8px 0; font-weight: bold; color: #666;">Registration Date:</td>
                             <td style="padding: 8px 0; color: #000;">{admin_data['createdAt'].strftime('%B %d, %Y at %I:%M %p')}</td>
                         </tr>
                     </table>
+                </div>
+                
+                <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107;">
+                    <p style="margin: 0; color: #856404; font-size: 14px;">
+                        <strong>⚠️ Important:</strong> Keep your password secure. You will need it to manage admin settings and delete the admin account if needed.
+                    </p>
                 </div>
                 
                 <div style="background: #fff3cd; padding: 20px; border-radius: 8px; margin: 30px 0; border-left: 4px solid #ffc107;">
