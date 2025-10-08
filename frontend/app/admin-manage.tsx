@@ -330,6 +330,7 @@ export default function AdminManage() {
                   onPress={() => {
                     setShowDeleteConfirm(false);
                     setConfirmEmail('');
+                    setDeletePassword('');
                   }}
                 >
                   <Text style={styles.cancelButtonText}>Cancel</Text>
