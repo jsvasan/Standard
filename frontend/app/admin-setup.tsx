@@ -193,6 +193,28 @@ export default function AdminSetup() {
             autoCapitalize="none"
           />
 
+          <Text style={styles.label}>Password *</Text>
+          <TextInput
+            style={styles.input}
+            value={password}
+            onChangeText={setPassword}
+            placeholder="Enter password (min 6 characters)"
+            placeholderTextColor="#999"
+            secureTextEntry
+            autoCapitalize="none"
+          />
+
+          <Text style={styles.label}>Confirm Password *</Text>
+          <TextInput
+            style={styles.input}
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            placeholder="Re-enter password"
+            placeholderTextColor="#999"
+            secureTextEntry
+            autoCapitalize="none"
+          />
+
           <TouchableOpacity
             style={[styles.registerButton, loading && styles.registerButtonDisabled]}
             onPress={handleRegister}
