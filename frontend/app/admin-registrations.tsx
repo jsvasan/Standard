@@ -490,13 +490,16 @@ export default function AdminRegistrations() {
           </View>
           
           <ScrollView style={styles.editScrollView}>
+            {/* Copyright Header */}
+            <Text style={styles.copyrightTop}>Copyright J Srinivasan</Text>
+            
             <Text style={styles.editSectionTitle}>Personal Information</Text>
             
             <TextInput
               style={styles.editInput}
               value={editFormData.personalInfo.registrantName}
               onChangeText={(value) => updatePersonalInfo('registrantName', value)}
-              placeholder="Full Name"
+              placeholder="Full Name *"
               placeholderTextColor="#999"
             />
             
@@ -504,7 +507,7 @@ export default function AdminRegistrations() {
               style={styles.editInput}
               value={editFormData.personalInfo.registrantAptNumber}
               onChangeText={(value) => updatePersonalInfo('registrantAptNumber', value)}
-              placeholder="Apartment Number"
+              placeholder="Apartment Number *"
               placeholderTextColor="#999"
             />
             
@@ -512,11 +515,208 @@ export default function AdminRegistrations() {
               style={styles.editInput}
               value={editFormData.personalInfo.dateOfBirth}
               onChangeText={(value) => updatePersonalInfo('dateOfBirth', value)}
-              placeholder="Date of Birth (DD/MM/YYYY)"
+              placeholder="Date of Birth (DD/MM/YYYY) *"
               placeholderTextColor="#999"
             />
             
-            {/* Add more form fields as needed - simplified for demo */}
+            <TextInput
+              style={styles.editInput}
+              value={editFormData.personalInfo.registrantPhone}
+              onChangeText={(value) => updatePersonalInfo('registrantPhone', value)}
+              placeholder="Mobile Phone Number *"
+              placeholderTextColor="#999"
+              keyboardType="phone-pad"
+            />
+
+            {/* Blood Group Selector */}
+            <Text style={styles.editFieldLabel}>Blood Group *</Text>
+            <View style={styles.bloodGroupContainer}>
+              {BLOOD_GROUPS.map((group) => (
+                <TouchableOpacity
+                  key={group}
+                  style={[
+                    styles.bloodGroupOption,
+                    editFormData.personalInfo.bloodGroup === group && styles.bloodGroupSelected
+                  ]}
+                  onPress={() => updatePersonalInfo('bloodGroup', group)}
+                >
+                  <Text style={[
+                    styles.bloodGroupText,
+                    editFormData.personalInfo.bloodGroup === group && styles.bloodGroupTextSelected
+                  ]}>
+                    {group}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <TextInput
+              style={styles.editInput}
+              value={editFormData.personalInfo.insurancePolicy}
+              onChangeText={(value) => updatePersonalInfo('insurancePolicy', value)}
+              placeholder="Insurance Policy Number (optional)"
+              placeholderTextColor="#999"
+            />
+            
+            <TextInput
+              style={styles.editInput}
+              value={editFormData.personalInfo.insuranceCompany}
+              onChangeText={(value) => updatePersonalInfo('insuranceCompany', value)}
+              placeholder="Insurance Company/ECHS (optional)"
+              placeholderTextColor="#999"
+            />
+            
+            <TextInput
+              style={styles.editInput}
+              value={editFormData.personalInfo.doctorName}
+              onChangeText={(value) => updatePersonalInfo('doctorName', value)}
+              placeholder="Doctor's Name (optional)"
+              placeholderTextColor="#999"
+            />
+            
+            <TextInput
+              style={styles.editInput}
+              value={editFormData.personalInfo.doctorContact}
+              onChangeText={(value) => updatePersonalInfo('doctorContact', value)}
+              placeholder="Doctor's Contact (optional)"
+              placeholderTextColor="#999"
+              keyboardType="phone-pad"
+            />
+            
+            <TextInput
+              style={styles.editInput}
+              value={editFormData.personalInfo.hospitalName}
+              onChangeText={(value) => updatePersonalInfo('hospitalName', value)}
+              placeholder="Hospital Name (optional)"
+              placeholderTextColor="#999"
+            />
+            
+            <TextInput
+              style={styles.editInput}
+              value={editFormData.personalInfo.hospitalNumber}
+              onChangeText={(value) => updatePersonalInfo('hospitalNumber', value)}
+              placeholder="Hospital Registration Number (optional)"
+              placeholderTextColor="#999"
+            />
+            
+            <TextInput
+              style={[styles.editInput, styles.multilineInput]}
+              value={editFormData.personalInfo.currentAilments}
+              onChangeText={(value) => updatePersonalInfo('currentAilments', value)}
+              placeholder="Current Ailments (optional)"
+              placeholderTextColor="#999"
+              multiline
+              numberOfLines={3}
+            />
+
+            {/* Buddies Section */}
+            <Text style={styles.editSectionTitle}>Buddies ({editFormData.buddies.length})</Text>
+            {editFormData.buddies.map((buddy, index) => (
+              <View key={index} style={styles.buddyEditSection}>
+                <View style={styles.buddyHeader}>
+                  <Text style={styles.buddyEditTitle}>Buddy {index + 1}</Text>
+                  {editFormData.buddies.length > 1 && (
+                    <TouchableOpacity onPress={() => removeBuddy(index)} style={styles.removeButton}>
+                      <Ionicons name="close-circle" size={24} color="#FF3B30" />
+                    </TouchableOpacity>
+                  )}
+                </View>
+                
+                <TextInput
+                  style={styles.editInput}
+                  value={buddy.name}
+                  onChangeText={(value) => updateBuddy(index, 'name', value)}
+                  placeholder="Buddy Name *"
+                  placeholderTextColor="#999"
+                />
+                
+                <TextInput
+                  style={styles.editInput}
+                  value={buddy.phone}
+                  onChangeText={(value) => updateBuddy(index, 'phone', value)}
+                  placeholder="Phone Number *"
+                  placeholderTextColor="#999"
+                  keyboardType="phone-pad"
+                />
+                
+                <TextInput
+                  style={styles.editInput}
+                  value={buddy.email}
+                  onChangeText={(value) => updateBuddy(index, 'email', value)}
+                  placeholder="Email Address *"
+                  placeholderTextColor="#999"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+                
+                <TextInput
+                  style={styles.editInput}
+                  value={buddy.aptNumber}
+                  onChangeText={(value) => updateBuddy(index, 'aptNumber', value)}
+                  placeholder="Apartment Number *"
+                  placeholderTextColor="#999"
+                />
+              </View>
+            ))}
+            
+            {editFormData.buddies.length < 2 && (
+              <TouchableOpacity style={styles.addButton} onPress={addBuddy}>
+                <Ionicons name="add-circle-outline" size={20} color="#007AFF" />
+                <Text style={styles.addButtonText}>Add Another Buddy</Text>
+              </TouchableOpacity>
+            )}
+
+            {/* Next of Kin Section */}
+            <Text style={styles.editSectionTitle}>Next of Kin ({editFormData.nextOfKin.length})</Text>
+            {editFormData.nextOfKin.map((kin, index) => (
+              <View key={index} style={styles.buddyEditSection}>
+                <View style={styles.buddyHeader}>
+                  <Text style={styles.buddyEditTitle}>Next of Kin {index + 1}</Text>
+                  {editFormData.nextOfKin.length > 1 && (
+                    <TouchableOpacity onPress={() => removeNextOfKin(index)} style={styles.removeButton}>
+                      <Ionicons name="close-circle" size={24} color="#FF3B30" />
+                    </TouchableOpacity>
+                  )}
+                </View>
+                
+                <TextInput
+                  style={styles.editInput}
+                  value={kin.name}
+                  onChangeText={(value) => updateNextOfKin(index, 'name', value)}
+                  placeholder="Name *"
+                  placeholderTextColor="#999"
+                />
+                
+                <TextInput
+                  style={styles.editInput}
+                  value={kin.phone}
+                  onChangeText={(value) => updateNextOfKin(index, 'phone', value)}
+                  placeholder="Phone Number *"
+                  placeholderTextColor="#999"
+                  keyboardType="phone-pad"
+                />
+                
+                <TextInput
+                  style={styles.editInput}
+                  value={kin.email}
+                  onChangeText={(value) => updateNextOfKin(index, 'email', value)}
+                  placeholder="Email Address *"
+                  placeholderTextColor="#999"
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+              </View>
+            ))}
+            
+            {editFormData.nextOfKin.length < 3 && (
+              <TouchableOpacity style={styles.addButton} onPress={addNextOfKin}>
+                <Ionicons name="add-circle-outline" size={20} color="#007AFF" />
+                <Text style={styles.addButtonText}>Add Next of Kin</Text>
+              </TouchableOpacity>
+            )}
+
+            {/* Bottom Copyright */}
+            <Text style={styles.copyrightBottom}>Developed by JS with AI Coding App</Text>
             
           </ScrollView>
         </SafeAreaView>
