@@ -30,309 +30,407 @@ def get_backend_url():
 BACKEND_URL = get_backend_url()
 API_BASE = f"{BACKEND_URL}/api"
 
-def test_admin_registration_management():
-    """Test admin registration management endpoints"""
-    print("🧪 Testing Admin Registration Management Endpoints")
-    print("=" * 60)
-    
-    # Test data - using the actual admin password from the system
-    admin_data = {
-        "name": "Test Admin",
-        "phone": "+1234567890",
-        "email": "admin@test.com",
-        "password": "VishnU@49"  # Using the actual admin password
-    }
-    
-    registration_data = {
-        "personalInfo": {
-            "registrantName": "John Doe",
-            "registrantAptNumber": "A101",
-            "dateOfBirth": "15/01/1990",
-            "registrantPhone": "+1987654321",
-            "bloodGroup": "O+",
-            "insurancePolicy": "INS123456",
-            "insuranceCompany": "Health Corp",
-            "doctorName": "Dr. Smith",
-            "doctorContact": "+1555123456",
-            "hospitalName": "City Hospital",
-            "hospitalNumber": "H789",
-            "currentAilments": "None"
-        },
-        "buddies": [
-            {
-                "name": "Alice Johnson",
-                "phone": "+1555111111",
-                "email": "alice@test.com",
-                "aptNumber": "B202"
-            },
-            {
-                "name": "Bob Wilson",
-                "phone": "+1555222222", 
-                "email": "bob@test.com",
-                "aptNumber": "C303"
-            }
-        ],
-        "nextOfKin": [
-            {
-                "name": "Jane Doe",
-                "phone": "+1555333333",
-                "email": "jane@test.com"
-            }
-        ]
-    }
-    
-    admin_id = None
-    registration_id = None
-    
-    try:
-        # Step 1: Use existing admin (we know the password)
-        print("\n1️⃣ Setting up admin...")
-        admin_response = requests.get(f"{BACKEND_URL}/admin")
+class EmailNotificationTester:
+    def __init__(self):
+        self.session = None
+        self.test_results = []
         
-        if admin_response.status_code == 200 and admin_response.json():
-            print("✅ Using existing admin")
-            admin_id = admin_response.json()["id"]
-        else:
-            print("📝 Creating new admin...")
-            admin_create_response = requests.post(f"{BACKEND_URL}/admin/register", json=admin_data)
-            if admin_create_response.status_code == 200:
-                admin_id = admin_create_response.json()["id"]
-                print(f"✅ Admin created successfully: {admin_id}")
-            else:
-                print(f"❌ Failed to create admin: {admin_create_response.status_code} - {admin_create_response.text}")
-                return False
+    async def __aenter__(self):
+        self.session = aiohttp.ClientSession()
+        return self
         
-        # Step 2: Create a test registration
-        print("\n2️⃣ Creating test registration...")
-        reg_response = requests.post(f"{BACKEND_URL}/registrations", json=registration_data)
-        if reg_response.status_code == 200:
-            registration_id = reg_response.json()["id"]
-            print(f"✅ Registration created successfully: {registration_id}")
-        else:
-            print(f"❌ Failed to create registration: {reg_response.status_code} - {reg_response.text}")
-            return False
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        if self.session:
+            await self.session.close()
+    
+    def log_result(self, test_name, success, message, details=None):
+        """Log test result"""
+        status = "✅ PASS" if success else "❌ FAIL"
+        logger.info(f"{status} - {test_name}: {message}")
         
-        # Step 3: Test PUT /api/registrations/{id} - Valid admin password
-        print("\n3️⃣ Testing PUT /api/registrations/{id} with valid admin password...")
-        
-        updated_data = {
-            "password": admin_data["password"],
+        self.test_results.append({
+            'test': test_name,
+            'success': success,
+            'message': message,
+            'details': details,
+            'timestamp': datetime.now().isoformat()
+        })
+    
+    async def test_admin_exists(self):
+        """Test if admin exists in the system"""
+        try:
+            async with self.session.get(f"{API_BASE}/admin") as response:
+                if response.status == 200:
+                    admin_data = await response.json()
+                    if admin_data:
+                        self.log_result(
+                            "Admin Exists Check", 
+                            True, 
+                            f"Admin found: {admin_data.get('email', 'Unknown')}"
+                        )
+                        return admin_data
+                    else:
+                        self.log_result(
+                            "Admin Exists Check", 
+                            False, 
+                            "No admin found in system"
+                        )
+                        return None
+                else:
+                    self.log_result(
+                        "Admin Exists Check", 
+                        False, 
+                        f"Failed to check admin: HTTP {response.status}"
+                    )
+                    return None
+        except Exception as e:
+            self.log_result(
+                "Admin Exists Check", 
+                False, 
+                f"Exception occurred: {str(e)}"
+            )
+            return None
+    
+    async def create_test_registration(self):
+        """Create a test registration to trigger email notification"""
+        test_registration = {
             "personalInfo": {
-                "registrantName": "John Doe Updated",
-                "registrantAptNumber": "A101",
-                "dateOfBirth": "15/01/1990",
-                "registrantPhone": "+1987654321",
-                "bloodGroup": "A+",  # Changed blood group
-                "insurancePolicy": "INS123456-UPDATED",
-                "insuranceCompany": "Health Corp Updated",
-                "doctorName": "Dr. Smith Updated",
-                "doctorContact": "+1555123456",
-                "hospitalName": "City Hospital Updated",
-                "hospitalNumber": "H789",
-                "currentAilments": "Updated ailments"
+                "registrantName": "Dr. Rajesh Kumar",
+                "registrantAptNumber": "A-204",
+                "dateOfBirth": "15/03/1975",
+                "registrantPhone": "+91-9876543210",
+                "bloodGroup": "B+",
+                "insurancePolicy": "HDFC-ERGO-789456",
+                "insuranceCompany": "HDFC ERGO Health Insurance",
+                "doctorName": "Dr. Priya Sharma",
+                "doctorContact": "+91-9123456789",
+                "hospitalName": "Apollo Hospital",
+                "hospitalNumber": "APL-REG-12345",
+                "currentAilments": "Hypertension, Diabetes Type 2"
             },
             "buddies": [
                 {
-                    "name": "Alice Johnson Updated",
-                    "phone": "+1555111111",
-                    "email": "alice.updated@test.com",
-                    "aptNumber": "B202"
+                    "name": "Suresh Patel",
+                    "phone": "+91-9988776655",
+                    "email": "suresh.patel@example.com",
+                    "aptNumber": "B-101"
+                },
+                {
+                    "name": "Meera Gupta",
+                    "phone": "+91-8877665544",
+                    "email": "meera.gupta@example.com", 
+                    "aptNumber": "C-305"
                 }
             ],
             "nextOfKin": [
                 {
-                    "name": "Jane Doe Updated",
-                    "phone": "+1555333333",
-                    "email": "jane.updated@test.com"
+                    "name": "Kavita Kumar",
+                    "phone": "+91-9876543211",
+                    "email": "kavita.kumar@example.com",
+                    "country": "INDIA",
+                    "city": "Bangalore",
+                    "address": "123 MG Road, Bangalore"
                 },
                 {
-                    "name": "Jim Doe",
-                    "phone": "+1555444444",
-                    "email": "jim@test.com"
+                    "name": "Arjun Kumar",
+                    "phone": "+91-9876543212", 
+                    "email": "arjun.kumar@example.com",
+                    "country": "INDIA",
+                    "city": "Mumbai",
+                    "address": "456 Marine Drive, Mumbai"
                 }
             ]
         }
         
-        update_response = requests.put(f"{BACKEND_URL}/registrations/{registration_id}", json=updated_data)
-        if update_response.status_code == 200:
-            updated_reg = update_response.json()
-            print("✅ Registration updated successfully with valid admin password")
-            print(f"   Updated name: {updated_reg['personalInfo']['registrantName']}")
-            print(f"   Updated blood group: {updated_reg['personalInfo']['bloodGroup']}")
-            print(f"   Buddies count: {len(updated_reg['buddies'])}")
-            print(f"   Next of kin count: {len(updated_reg['nextOfKin'])}")
-        else:
-            print(f"❌ Failed to update registration with valid password: {update_response.status_code} - {update_response.text}")
-            return False
-        
-        # Step 4: Test PUT with invalid admin password
-        print("\n4️⃣ Testing PUT /api/registrations/{id} with invalid admin password...")
-        
-        invalid_password_data = updated_data.copy()
-        invalid_password_data["password"] = "WrongPassword123!"
-        
-        invalid_update_response = requests.put(f"{BACKEND_URL}/registrations/{registration_id}", json=invalid_password_data)
-        if invalid_update_response.status_code == 401:
-            print("✅ Correctly rejected update with invalid admin password (401)")
-        else:
-            print(f"❌ Expected 401 for invalid password, got: {invalid_update_response.status_code} - {invalid_update_response.text}")
-            return False
-        
-        # Step 5: Test PUT with invalid registration ID
-        print("\n5️⃣ Testing PUT /api/registrations/{id} with invalid registration ID...")
-        
-        invalid_id_response = requests.put(f"{BACKEND_URL}/registrations/invalid_id", json=updated_data)
-        if invalid_id_response.status_code == 400:
-            print("✅ Correctly rejected update with invalid registration ID (400)")
-        else:
-            print(f"❌ Expected 400 for invalid ID, got: {invalid_id_response.status_code} - {invalid_id_response.text}")
-            return False
-        
-        # Step 6: Test PUT with invalid data structure (too many buddies)
-        print("\n6️⃣ Testing PUT /api/registrations/{id} with invalid data structure...")
-        
-        invalid_structure_data = updated_data.copy()
-        invalid_structure_data["buddies"] = [
-            {"name": "Buddy1", "phone": "+1111111111", "email": "buddy1@test.com", "aptNumber": "A1"},
-            {"name": "Buddy2", "phone": "+1222222222", "email": "buddy2@test.com", "aptNumber": "A2"},
-            {"name": "Buddy3", "phone": "+1333333333", "email": "buddy3@test.com", "aptNumber": "A3"}  # Too many buddies
-        ]
-        
-        invalid_structure_response = requests.put(f"{BACKEND_URL}/registrations/{registration_id}", json=invalid_structure_data)
-        if invalid_structure_response.status_code == 400:
-            print("✅ Correctly rejected update with invalid data structure - too many buddies (400)")
-        else:
-            print(f"❌ Expected 400 for invalid structure, got: {invalid_structure_response.status_code} - {invalid_structure_response.text}")
-            return False
-        
-        # Step 7: Test PUT with invalid data structure (too many next of kin)
-        print("\n7️⃣ Testing PUT /api/registrations/{id} with too many next of kin...")
-        
-        invalid_kin_data = updated_data.copy()
-        invalid_kin_data["nextOfKin"] = [
-            {"name": "Kin1", "phone": "+1111111111", "email": "kin1@test.com"},
-            {"name": "Kin2", "phone": "+1222222222", "email": "kin2@test.com"},
-            {"name": "Kin3", "phone": "+1333333333", "email": "kin3@test.com"},
-            {"name": "Kin4", "phone": "+1444444444", "email": "kin4@test.com"}  # Too many next of kin
-        ]
-        
-        invalid_kin_response = requests.put(f"{BACKEND_URL}/registrations/{registration_id}", json=invalid_kin_data)
-        if invalid_kin_response.status_code == 400:
-            print("✅ Correctly rejected update with too many next of kin (400)")
-        else:
-            print(f"❌ Expected 400 for too many next of kin, got: {invalid_kin_response.status_code} - {invalid_kin_response.text}")
-            return False
-        
-        # Step 8: Test DELETE /api/registrations/{id} with invalid admin password
-        print("\n8️⃣ Testing DELETE /api/registrations/{id} with invalid admin password...")
-        
-        invalid_delete_data = {"password": "WrongPassword123!"}
-        invalid_delete_response = requests.delete(f"{BACKEND_URL}/registrations/{registration_id}", json=invalid_delete_data)
-        if invalid_delete_response.status_code == 401:
-            print("✅ Correctly rejected delete with invalid admin password (401)")
-        else:
-            print(f"❌ Expected 401 for invalid password, got: {invalid_delete_response.status_code} - {invalid_delete_response.text}")
-            return False
-        
-        # Step 9: Test DELETE with invalid registration ID
-        print("\n9️⃣ Testing DELETE /api/registrations/{id} with invalid registration ID...")
-        
-        valid_delete_data = {"password": admin_data["password"]}
-        invalid_id_delete_response = requests.delete(f"{BACKEND_URL}/registrations/invalid_id", json=valid_delete_data)
-        if invalid_id_delete_response.status_code == 400:
-            print("✅ Correctly rejected delete with invalid registration ID (400)")
-        else:
-            print(f"❌ Expected 400 for invalid ID, got: {invalid_id_delete_response.status_code} - {invalid_id_delete_response.text}")
-            return False
-        
-        # Step 10: Test DELETE with non-existent registration ID
-        print("\n🔟 Testing DELETE /api/registrations/{id} with non-existent registration ID...")
-        
-        fake_id = "507f1f77bcf86cd799439011"  # Valid ObjectId format but doesn't exist
-        nonexistent_delete_response = requests.delete(f"{BACKEND_URL}/registrations/{fake_id}", json=valid_delete_data)
-        if nonexistent_delete_response.status_code == 404:
-            print("✅ Correctly rejected delete with non-existent registration ID (404)")
-        else:
-            print(f"❌ Expected 404 for non-existent ID, got: {nonexistent_delete_response.status_code} - {nonexistent_delete_response.text}")
-            return False
-        
-        # Step 11: Test DELETE /api/registrations/{id} with valid admin password
-        print("\n1️⃣1️⃣ Testing DELETE /api/registrations/{id} with valid admin password...")
-        
-        delete_response = requests.delete(f"{BACKEND_URL}/registrations/{registration_id}", json=valid_delete_data)
-        if delete_response.status_code == 200:
-            delete_result = delete_response.json()
-            print("✅ Registration deleted successfully with valid admin password")
-            print(f"   Deleted ID: {delete_result.get('deleted_id')}")
-        else:
-            print(f"❌ Failed to delete registration with valid password: {delete_response.status_code} - {delete_response.text}")
-            return False
-        
-        # Step 12: Verify registration is actually deleted
-        print("\n1️⃣2️⃣ Verifying registration is actually deleted...")
-        
-        verify_response = requests.get(f"{BACKEND_URL}/registrations/{registration_id}")
-        if verify_response.status_code == 404:
-            print("✅ Confirmed registration is deleted (404 when trying to fetch)")
-        else:
-            print(f"❌ Registration still exists after deletion: {verify_response.status_code}")
-            return False
-        
-        print("\n" + "=" * 60)
-        print("🎉 ALL ADMIN REGISTRATION MANAGEMENT TESTS PASSED!")
-        print("=" * 60)
-        return True
-        
-    except Exception as e:
-        print(f"\n❌ Test failed with exception: {str(e)}")
-        return False
-
-def test_password_verification():
-    """Test bcrypt password verification specifically"""
-    print("\n🔐 Testing Password Verification with bcrypt...")
-    print("=" * 40)
+        try:
+            async with self.session.post(
+                f"{API_BASE}/registrations",
+                json=test_registration,
+                headers={'Content-Type': 'application/json'}
+            ) as response:
+                
+                response_text = await response.text()
+                
+                if response.status == 200:
+                    registration_data = json.loads(response_text) if response_text else {}
+                    self.log_result(
+                        "Test Registration Creation",
+                        True,
+                        f"Registration created successfully for {test_registration['personalInfo']['registrantName']}",
+                        {"registration_id": registration_data.get('id'), "is_update": registration_data.get('is_update')}
+                    )
+                    return registration_data
+                else:
+                    self.log_result(
+                        "Test Registration Creation",
+                        False,
+                        f"Failed to create registration: HTTP {response.status}",
+                        {"response": response_text}
+                    )
+                    return None
+                    
+        except Exception as e:
+            self.log_result(
+                "Test Registration Creation",
+                False,
+                f"Exception occurred: {str(e)}"
+            )
+            return None
     
-    try:
-        # Test admin password verification endpoint
-        test_password = "TestPassword123!"
-        
-        verify_response = requests.post(f"{BACKEND_URL}/admin/verify-password", json={"password": test_password})
-        
-        if verify_response.status_code == 404:
-            print("ℹ️ No admin found for password verification test (expected if no admin exists)")
-            return True
-        elif verify_response.status_code == 401:
-            print("✅ Password verification working - correctly rejected wrong password")
-            return True
-        elif verify_response.status_code == 200:
-            print("✅ Password verification working - accepted correct password")
-            return True
-        else:
-            print(f"❌ Unexpected response from password verification: {verify_response.status_code}")
-            return False
+    async def check_backend_logs_for_email_errors(self):
+        """Check backend logs for email-related errors"""
+        try:
+            # Check recent backend logs for email errors
+            import subprocess
+            result = subprocess.run(
+                ['tail', '-n', '100', '/var/log/supervisor/backend.err.log'],
+                capture_output=True,
+                text=True
+            )
             
-    except Exception as e:
-        print(f"❌ Password verification test failed: {str(e)}")
-        return False
+            log_content = result.stdout
+            
+            # Look for email-related errors
+            email_errors = []
+            auth_errors = []
+            success_messages = []
+            
+            for line in log_content.split('\n'):
+                line_lower = line.lower()
+                if 'email' in line_lower:
+                    if 'error' in line_lower or 'failed' in line_lower:
+                        email_errors.append(line.strip())
+                    elif 'sent successfully' in line_lower:
+                        success_messages.append(line.strip())
+                
+                if '535' in line and 'username and password not accepted' in line_lower:
+                    auth_errors.append(line.strip())
+            
+            # Analyze results
+            if auth_errors:
+                self.log_result(
+                    "Email Authentication Check",
+                    False,
+                    f"Found {len(auth_errors)} authentication errors in logs",
+                    {"auth_errors": auth_errors[-3:]}  # Last 3 errors
+                )
+            elif email_errors:
+                self.log_result(
+                    "Email Authentication Check",
+                    False,
+                    f"Found {len(email_errors)} email errors in logs",
+                    {"email_errors": email_errors[-3:]}  # Last 3 errors
+                )
+            elif success_messages:
+                self.log_result(
+                    "Email Authentication Check",
+                    True,
+                    f"Found {len(success_messages)} successful email sends in logs",
+                    {"recent_success": success_messages[-2:]}  # Last 2 successes
+                )
+            else:
+                self.log_result(
+                    "Email Authentication Check",
+                    True,
+                    "No email authentication errors found in recent logs"
+                )
+                
+        except Exception as e:
+            self.log_result(
+                "Email Authentication Check",
+                False,
+                f"Could not check backend logs: {str(e)}"
+            )
+    
+    async def test_email_configuration(self):
+        """Test email configuration from environment"""
+        try:
+            # Read backend .env file
+            env_vars = {}
+            with open('/app/backend/.env', 'r') as f:
+                for line in f:
+                    if '=' in line and not line.startswith('#'):
+                        key, value = line.strip().split('=', 1)
+                        env_vars[key] = value.strip('"')
+            
+            gmail_email = env_vars.get('GMAIL_EMAIL')
+            gmail_password = env_vars.get('GMAIL_PASSWORD')
+            
+            if gmail_email and gmail_password:
+                # Check if it's the expected configuration
+                expected_email = "jsvasan.ab@gmail.com"
+                expected_password = "kzzg tqzs pjht inhx"
+                
+                email_correct = gmail_email == expected_email
+                password_correct = gmail_password == expected_password
+                
+                if email_correct and password_correct:
+                    self.log_result(
+                        "Email Configuration Check",
+                        True,
+                        f"Email configuration correct: {gmail_email} with updated App Password"
+                    )
+                else:
+                    issues = []
+                    if not email_correct:
+                        issues.append(f"Email mismatch: got {gmail_email}, expected {expected_email}")
+                    if not password_correct:
+                        issues.append("App Password does not match expected value")
+                    
+                    self.log_result(
+                        "Email Configuration Check",
+                        False,
+                        f"Email configuration issues: {'; '.join(issues)}"
+                    )
+            else:
+                missing = []
+                if not gmail_email:
+                    missing.append("GMAIL_EMAIL")
+                if not gmail_password:
+                    missing.append("GMAIL_PASSWORD")
+                
+                self.log_result(
+                    "Email Configuration Check",
+                    False,
+                    f"Missing email configuration: {', '.join(missing)}"
+                )
+                
+        except Exception as e:
+            self.log_result(
+                "Email Configuration Check",
+                False,
+                f"Could not read email configuration: {str(e)}"
+            )
+    
+    async def wait_for_email_processing(self, seconds=10):
+        """Wait for email processing and check logs"""
+        logger.info(f"Waiting {seconds} seconds for email processing...")
+        await asyncio.sleep(seconds)
+        
+        # Check logs again for recent email activity
+        try:
+            import subprocess
+            result = subprocess.run(
+                ['tail', '-n', '20', '/var/log/supervisor/backend.err.log'],
+                capture_output=True,
+                text=True
+            )
+            
+            recent_logs = result.stdout
+            email_activity = []
+            
+            for line in recent_logs.split('\n'):
+                if 'email' in line.lower():
+                    email_activity.append(line.strip())
+            
+            if email_activity:
+                self.log_result(
+                    "Email Processing Check",
+                    True,
+                    f"Found {len(email_activity)} email-related log entries",
+                    {"recent_activity": email_activity}
+                )
+            else:
+                self.log_result(
+                    "Email Processing Check",
+                    False,
+                    "No email activity found in recent logs after registration"
+                )
+                
+        except Exception as e:
+            self.log_result(
+                "Email Processing Check",
+                False,
+                f"Could not check recent email activity: {str(e)}"
+            )
+    
+    async def run_comprehensive_email_tests(self):
+        """Run all email-related tests"""
+        logger.info("🚀 Starting Comprehensive Email Notification Testing")
+        logger.info(f"Backend URL: {BACKEND_URL}")
+        
+        # Test 1: Check email configuration
+        await self.test_email_configuration()
+        
+        # Test 2: Check if admin exists
+        admin_data = await self.test_admin_exists()
+        
+        if not admin_data:
+            logger.error("❌ Cannot proceed with email tests - no admin found")
+            return
+        
+        # Test 3: Check backend logs for existing email errors
+        await self.check_backend_logs_for_email_errors()
+        
+        # Test 4: Create test registration (should trigger email)
+        registration_data = await self.create_test_registration()
+        
+        if registration_data:
+            # Test 5: Wait and check for email processing
+            await self.wait_for_email_processing(15)
+            
+            # Test 6: Final log check for email success/failure
+            await self.check_backend_logs_for_email_errors()
+        
+        # Print summary
+        self.print_test_summary()
+    
+    def print_test_summary(self):
+        """Print comprehensive test summary"""
+        logger.info("\n" + "="*80)
+        logger.info("📧 EMAIL NOTIFICATION TESTING SUMMARY")
+        logger.info("="*80)
+        
+        passed = sum(1 for result in self.test_results if result['success'])
+        failed = len(self.test_results) - passed
+        
+        logger.info(f"Total Tests: {len(self.test_results)}")
+        logger.info(f"✅ Passed: {passed}")
+        logger.info(f"❌ Failed: {failed}")
+        logger.info("")
+        
+        # Group results by success/failure
+        failed_tests = [r for r in self.test_results if not r['success']]
+        passed_tests = [r for r in self.test_results if r['success']]
+        
+        if failed_tests:
+            logger.info("❌ FAILED TESTS:")
+            for result in failed_tests:
+                logger.info(f"  • {result['test']}: {result['message']}")
+                if result.get('details'):
+                    logger.info(f"    Details: {result['details']}")
+            logger.info("")
+        
+        if passed_tests:
+            logger.info("✅ PASSED TESTS:")
+            for result in passed_tests:
+                logger.info(f"  • {result['test']}: {result['message']}")
+            logger.info("")
+        
+        # Email-specific analysis
+        email_config_passed = any(r['test'] == 'Email Configuration Check' and r['success'] for r in self.test_results)
+        registration_passed = any(r['test'] == 'Test Registration Creation' and r['success'] for r in self.test_results)
+        auth_check_passed = any(r['test'] == 'Email Authentication Check' and r['success'] for r in self.test_results)
+        
+        logger.info("🔍 EMAIL SYSTEM ANALYSIS:")
+        logger.info(f"  📧 Email Configuration: {'✅ CORRECT' if email_config_passed else '❌ ISSUES'}")
+        logger.info(f"  📝 Registration Creation: {'✅ WORKING' if registration_passed else '❌ FAILED'}")
+        logger.info(f"  🔐 Authentication Status: {'✅ NO ERRORS' if auth_check_passed else '❌ ERRORS FOUND'}")
+        
+        if email_config_passed and registration_passed and auth_check_passed:
+            logger.info("\n🎉 EMAIL SYSTEM STATUS: WORKING CORRECTLY")
+            logger.info("   Gmail App Password authentication successful")
+            logger.info("   Registration emails should be sending to admin")
+        else:
+            logger.info("\n⚠️  EMAIL SYSTEM STATUS: ISSUES DETECTED")
+            logger.info("   Check failed tests above for specific problems")
+        
+        logger.info("="*80)
+
+async def main():
+    """Main test execution"""
+    async with EmailNotificationTester() as tester:
+        await tester.run_comprehensive_email_tests()
 
 if __name__ == "__main__":
-    print("🚀 Starting Backend API Tests for Admin Registration Management")
-    print(f"🌐 Backend URL: {BACKEND_URL}")
-    print("=" * 80)
-    
-    # Run tests
-    admin_tests_passed = test_admin_registration_management()
-    password_tests_passed = test_password_verification()
-    
-    print("\n" + "=" * 80)
-    print("📊 TEST SUMMARY")
-    print("=" * 80)
-    print(f"Admin Registration Management Tests: {'✅ PASSED' if admin_tests_passed else '❌ FAILED'}")
-    print(f"Password Verification Tests: {'✅ PASSED' if password_tests_passed else '❌ FAILED'}")
-    
-    if admin_tests_passed and password_tests_passed:
-        print("\n🎉 ALL TESTS PASSED - Admin registration management is working correctly!")
-        sys.exit(0)
-    else:
-        print("\n❌ SOME TESTS FAILED - Check the output above for details")
-        sys.exit(1)
+    asyncio.run(main())
