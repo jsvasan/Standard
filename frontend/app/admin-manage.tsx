@@ -140,6 +140,16 @@ export default function AdminManage() {
       return;
     }
 
+    // Verify password is entered
+    if (!deletePassword) {
+      if (Platform.OS === 'web') {
+        alert('Please enter your admin password.');
+      } else {
+        Alert.alert('Error', 'Please enter your admin password.');
+      }
+      return;
+    }
+
     setDeleting(true);
     try {
       const response = await fetch(`${EXPO_PUBLIC_BACKEND_URL}/api/admin/delete`, {
@@ -147,7 +157,7 @@ export default function AdminManage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: confirmEmail }),
+        body: JSON.stringify({ email: confirmEmail, password: deletePassword }),
       });
 
       if (response.ok) {
