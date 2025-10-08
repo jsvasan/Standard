@@ -26,6 +26,11 @@ export default function RegistrationForm() {
   const [checkingAdmin, setCheckingAdmin] = useState(true);
   const [adminExists, setAdminExists] = useState(false);
 
+  // Admin verification for registrations access
+  const [showAdminModal, setShowAdminModal] = useState(false);
+  const [adminPassword, setAdminPassword] = useState('');
+  const [verifyingAdmin, setVerifyingAdmin] = useState(false);
+
   // Collapsible sections state
   const [expandedSections, setExpandedSections] = useState({
     personal: true,
