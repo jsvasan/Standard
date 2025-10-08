@@ -290,6 +290,68 @@ export default function AdminManage() {
     );
   }
 
+  // Show password verification screen if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+            <Ionicons name="arrow-back" size={24} color="#007AFF" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Admin Management</Text>
+          <View style={styles.backButton} />
+        </View>
+
+        <View style={styles.centerContainer}>
+          <View style={styles.lockIcon}>
+            <Ionicons name="lock-closed" size={64} color="#007AFF" />
+          </View>
+          
+          <Text style={styles.verifyTitle}>Password Required</Text>
+          <Text style={styles.verifyText}>
+            Enter your admin password to access management settings
+          </Text>
+
+          <View style={styles.verifyForm}>
+            <Text style={styles.label}>Admin Password *</Text>
+            <TextInput
+              style={styles.input}
+              value={accessPassword}
+              onChangeText={setAccessPassword}
+              placeholder="Enter your password"
+              placeholderTextColor="#999"
+              secureTextEntry
+              autoCapitalize="none"
+              autoFocus
+            />
+
+            <TouchableOpacity
+              style={[styles.verifyButton, verifying && styles.verifyButtonDisabled]}
+              onPress={handleVerifyPassword}
+              disabled={verifying}
+            >
+              {verifying ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <>
+                  <Ionicons name="shield-checkmark" size={20} color="#fff" />
+                  <Text style={styles.verifyButtonText}>Verify & Continue</Text>
+                </>
+              )}
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.helpBox}>
+            <Ionicons name="information-circle-outline" size={20} color="#666" />
+            <Text style={styles.helpText}>
+              This is the password you set when registering as admin
+            </Text>
+          </View>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
