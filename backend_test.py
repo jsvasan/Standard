@@ -333,33 +333,33 @@ class EmailNotificationTester:
                 f"Could not check recent email activity: {str(e)}"
             )
     
-    async def run_comprehensive_email_tests(self):
+    def run_comprehensive_email_tests(self):
         """Run all email-related tests"""
         logger.info("🚀 Starting Comprehensive Email Notification Testing")
         logger.info(f"Backend URL: {BACKEND_URL}")
         
         # Test 1: Check email configuration
-        await self.test_email_configuration()
+        self.test_email_configuration()
         
         # Test 2: Check if admin exists
-        admin_data = await self.test_admin_exists()
+        admin_data = self.test_admin_exists()
         
         if not admin_data:
             logger.error("❌ Cannot proceed with email tests - no admin found")
             return
         
         # Test 3: Check backend logs for existing email errors
-        await self.check_backend_logs_for_email_errors()
+        self.check_backend_logs_for_email_errors()
         
         # Test 4: Create test registration (should trigger email)
-        registration_data = await self.create_test_registration()
+        registration_data = self.create_test_registration()
         
         if registration_data:
             # Test 5: Wait and check for email processing
-            await self.wait_for_email_processing(15)
+            self.wait_for_email_processing(15)
             
             # Test 6: Final log check for email success/failure
-            await self.check_backend_logs_for_email_errors()
+            self.check_backend_logs_for_email_errors()
         
         # Print summary
         self.print_test_summary()
