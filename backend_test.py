@@ -416,10 +416,10 @@ class EmailNotificationTester:
         
         logger.info("="*80)
 
-async def main():
+def main():
     """Main test execution"""
-    async with EmailNotificationTester() as tester:
-        await tester.run_comprehensive_email_tests()
+    tester = EmailNotificationTester()
+    tester.run_comprehensive_email_tests()
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
