@@ -686,7 +686,7 @@ export default function AdminManage() {
                 ) : (
                   <>
                     <Ionicons name="refresh" size={20} color="#FFF" />
-                    <Text style={styles.downloadNewButtonText}>New Only</Text>
+                    <Text style={styles.downloadNewButtonText}>Newly Added Registrations</Text>
                   </>
                 )}
               </TouchableOpacity>
