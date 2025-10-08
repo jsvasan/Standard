@@ -4,11 +4,11 @@ Backend Email Notification Testing
 Focus: Test email notification system with updated Gmail App Password
 """
 
-import asyncio
-import aiohttp
+import requests
 import json
 import os
 import sys
+import time
 from datetime import datetime
 import logging
 
