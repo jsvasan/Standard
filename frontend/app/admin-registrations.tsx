@@ -123,6 +123,8 @@ export default function AdminRegistrations() {
     setVerifying(true);
     try {
       if (pendingAction.type === 'edit') {
+        // Store the verified password for the update operation
+        setVerifiedPassword(password);
         // Initialize edit form data
         setEditFormData({
           personalInfo: { ...pendingAction.reg.personalInfo },
