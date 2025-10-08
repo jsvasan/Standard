@@ -38,13 +38,16 @@ GMAIL_PASSWORD = os.environ.get('GMAIL_PASSWORD')
 async def send_email_notification(admin_email: str, registration_data: dict):
     try:
         # Format registration data for email
-        # Calculate age from date of birth
+        # Calculate age from date of birth (DD/MM/YYYY format)
         from datetime import datetime
         try:
-            dob = datetime.strptime(registration_data['personalInfo']['dateOfBirth'], '%Y-%m-%d')
+            # Parse DD/MM/YYYY format
+            dob_str = registration_data['personalInfo']['dateOfBirth']
+            dob = datetime.strptime(dob_str, '%d/%m/%Y')
             today = datetime.today()
             age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
-        except:
+        except Exception as e:
+            logger.warning(f"Could not parse date of birth: {registration_data['personalInfo']['dateOfBirth']}")
             age = "N/A"
         
         email_body = f"""
