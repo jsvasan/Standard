@@ -406,6 +406,138 @@ class RegistrationResponse(BaseModel):
     nextOfKin: List[NextOfKin]
     createdAt: datetime
 
+# Excel generation functions
+def calculate_age(date_of_birth_str: str) -> str:
+    """Calculate age from date of birth string"""
+    try:
+        # Parse date in DD/MM/YYYY format
+        day, month, year = date_of_birth_str.split('/')
+        dob = datetime(int(year), int(month), int(day))
+        today = datetime.now()
+        age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+        return str(age)
+    except:
+        return 'N/A'
+
+def create_excel_from_registrations(registrations_list: List[dict], filename: str = "registrations.xlsx") -> bytes:
+    """Create Excel file from registrations data"""
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Buddy Registrations"
+    
+    # Define styles
+    header_font = Font(name='Arial', size=12, bold=True, color='FFFFFF')
+    header_fill = PatternFill(start_color='366092', end_color='366092', fill_type='solid')
+    header_alignment = Alignment(horizontal='center', vertical='center', wrap_text=True)
+    
+    data_font = Font(name='Arial', size=10)
+    data_alignment = Alignment(horizontal='left', vertical='center', wrap_text=True)
+    
+    border = Border(
+        left=Side(border_style='thin'),
+        right=Side(border_style='thin'),
+        top=Side(border_style='thin'),
+        bottom=Side(border_style='thin')
+    )
+    
+    # Headers
+    headers = [
+        'Registration Date', 'Full Name', 'Apt Number', 'Date of Birth', 'Age', 
+        'Mobile Phone', 'Blood Group', 'Insurance Policy', 'Insurance Company',
+        'Doctor Name', 'Doctor Contact', 'Hospital Name', 'Hospital Reg Number',
+        'Current Ailments', 'Buddy 1 Name', 'Buddy 1 Phone', 'Buddy 1 Email',
+        'Buddy 1 Apt', 'Buddy 2 Name', 'Buddy 2 Phone', 'Buddy 2 Email',
+        'Buddy 2 Apt', 'Next of Kin 1 Name', 'Next of Kin 1 Phone', 
+        'Next of Kin 1 Email', 'Next of Kin 2 Name', 'Next of Kin 2 Phone',
+        'Next of Kin 2 Email', 'Next of Kin 3 Name', 'Next of Kin 3 Phone',
+        'Next of Kin 3 Email'
+    ]
+    
+    # Add headers
+    for col, header in enumerate(headers, 1):
+        cell = ws.cell(row=1, column=col)
+        cell.value = header
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.alignment = header_alignment
+        cell.border = border
+    
+    # Add data
+    for row_idx, reg in enumerate(registrations_list, 2):
+        personal = reg['personalInfo']
+        buddies = reg['buddies']
+        next_of_kin = reg['nextOfKin']
+        
+        # Personal info
+        age = calculate_age(personal.get('dateOfBirth', ''))
+        reg_date = reg['createdAt'].strftime('%d/%m/%Y') if isinstance(reg['createdAt'], datetime) else reg['createdAt']
+        
+        row_data = [
+            reg_date,
+            personal.get('registrantName', ''),
+            personal.get('registrantAptNumber', ''),
+            personal.get('dateOfBirth', ''),
+            age,
+            personal.get('registrantPhone', ''),
+            personal.get('bloodGroup', ''),
+            personal.get('insurancePolicy', ''),
+            personal.get('insuranceCompany', ''),
+            personal.get('doctorName', ''),
+            personal.get('doctorContact', ''),
+            personal.get('hospitalName', ''),
+            personal.get('hospitalNumber', ''),
+            personal.get('currentAilments', ''),
+        ]
+        
+        # Buddies (up to 2)
+        for i in range(2):
+            if i < len(buddies):
+                buddy = buddies[i]
+                row_data.extend([
+                    buddy.get('name', ''),
+                    buddy.get('phone', ''),
+                    buddy.get('email', ''),
+                    buddy.get('aptNumber', ''),
+                ])
+            else:
+                row_data.extend(['', '', '', ''])
+        
+        # Next of Kin (up to 3)
+        for i in range(3):
+            if i < len(next_of_kin):
+                kin = next_of_kin[i]
+                row_data.extend([
+                    kin.get('name', ''),
+                    kin.get('phone', ''),
+                    kin.get('email', ''),
+                ])
+            else:
+                row_data.extend(['', '', ''])
+        
+        # Add data to row
+        for col, value in enumerate(row_data, 1):
+            cell = ws.cell(row=row_idx, column=col)
+            cell.value = value
+            cell.font = data_font
+            cell.alignment = data_alignment
+            cell.border = border
+    
+    # Auto-adjust column widths
+    for col in ws.columns:
+        max_length = 0
+        column = col[0].column_letter
+        for cell in col:
+            if cell.value:
+                max_length = max(max_length, len(str(cell.value)))
+        adjusted_width = min(max_length + 2, 50)
+        ws.column_dimensions[column].width = adjusted_width
+    
+    # Save to bytes
+    excel_buffer = io.BytesIO()
+    wb.save(excel_buffer)
+    excel_buffer.seek(0)
+    return excel_buffer.read()
+
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
