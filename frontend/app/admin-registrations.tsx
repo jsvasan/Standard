@@ -181,7 +181,7 @@ export default function AdminRegistrations() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          password: password,
+          password: verifiedPassword,
           personalInfo: editFormData.personalInfo,
           buddies: editFormData.buddies,
           nextOfKin: editFormData.nextOfKin,
