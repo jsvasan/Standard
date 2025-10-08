@@ -178,10 +178,10 @@ metadata:
 test_plan:
   current_focus:
     - "Build registration form with collapsible sections"
-    - "Build registrations view with export functionality"
+    - "Create admin registration management (edit/delete with password verification)"
   stuck_tasks: []
-  test_all: true
-  test_priority: "sequential"
+  test_all: false
+  test_priority: "high_first"
 
 agent_communication:
   - agent: "main"
