@@ -483,7 +483,9 @@ export default function AdminManage() {
           <Ionicons name="arrow-back" size={24} color="#007AFF" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Admin Management</Text>
-        <View style={styles.backButton} />
+        <TouchableOpacity onPress={() => router.push('/')} style={styles.homeButton}>
+          <Ionicons name="home" size={24} color="#007AFF" />
+        </TouchableOpacity>
       </View>
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
