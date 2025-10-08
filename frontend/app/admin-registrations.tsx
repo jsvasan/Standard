@@ -1169,4 +1169,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 8,
   },
+  homeButton: {
+    padding: 8,
+    width: 40,
+  },
 });
