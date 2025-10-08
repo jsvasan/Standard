@@ -352,6 +352,11 @@ export default function RegistrationForm() {
           </TouchableOpacity>
         </View>
 
+        {/* Copyright Header */}
+        <View style={styles.copyrightContainer}>
+          <Text style={styles.copyrightTop}>Copyright J Srinivasan</Text>
+        </View>
+
         {!checkingAdmin && !adminExists && (
           <View style={styles.adminBanner}>
             <Ionicons name="warning" size={24} color="#FF9500" />
