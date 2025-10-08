@@ -473,11 +473,17 @@ export default function AdminRegistrations() {
       <Modal
         visible={showEditModal}
         animationType="slide"
-        onRequestClose={() => setShowEditModal(false)}
+        onRequestClose={() => {
+          setShowEditModal(false);
+          setVerifiedPassword(''); // Clear verified password on close
+        }}
       >
         <SafeAreaView style={styles.editModalContainer}>
           <View style={styles.editHeader}>
-            <TouchableOpacity onPress={() => setShowEditModal(false)}>
+            <TouchableOpacity onPress={() => {
+              setShowEditModal(false);
+              setVerifiedPassword(''); // Clear verified password on close
+            }}>
               <Ionicons name="close" size={24} color="#007AFF" />
             </TouchableOpacity>
             <Text style={styles.editTitle}>Edit Registration</Text>
