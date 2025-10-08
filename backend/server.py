@@ -476,6 +476,33 @@ async def delete_admin(request: AdminDeleteRequest):
         logger.error(f"Error deleting admin: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.post("/admin/verify-password")
+async def verify_admin_password(request: dict):
+    try:
+        admin = await db.admins.find_one({})
+        
+        if not admin:
+            raise HTTPException(status_code=404, detail="Admin not found")
+        
+        password = request.get("password")
+        if not password:
+            raise HTTPException(status_code=400, detail="Password is required")
+        
+        # Verify password
+        if 'password_hash' in admin:
+            if bcrypt.checkpw(password.encode('utf-8'), admin['password_hash'].encode('utf-8')):
+                return {"message": "Password verified successfully", "verified": True}
+            else:
+                raise HTTPException(status_code=401, detail="Incorrect password")
+        else:
+            raise HTTPException(status_code=400, detail="Password not set for admin")
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error verifying password: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @api_router.put("/admin/additional-emails")
 async def update_additional_emails(request: dict):
     try:
