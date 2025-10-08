@@ -746,6 +746,38 @@ export default function RegistrationForm() {
                       keyboardType="email-address"
                       autoCapitalize="none"
                     />
+
+                    {/* Address Section */}
+                    <Text style={styles.addressSectionTitle}>Address (Optional)</Text>
+                    
+                    <Text style={styles.label}>Country</Text>
+                    <TextInput
+                      style={styles.input}
+                      value={kin.country}
+                      onChangeText={(value) => updateNextOfKin(index, 'country', value)}
+                      placeholder="Country"
+                      placeholderTextColor="#999"
+                    />
+
+                    <Text style={styles.label}>City</Text>
+                    <TextInput
+                      style={styles.input}
+                      value={kin.city}
+                      onChangeText={(value) => updateNextOfKin(index, 'city', value)}
+                      placeholder="City"
+                      placeholderTextColor="#999"
+                    />
+
+                    <Text style={styles.label}>Address</Text>
+                    <TextInput
+                      style={[styles.input, styles.multilineInput]}
+                      value={kin.address}
+                      onChangeText={(value) => updateNextOfKin(index, 'address', value)}
+                      placeholder="Enter complete address"
+                      placeholderTextColor="#999"
+                      multiline
+                      numberOfLines={3}
+                    />
                   </View>
                 ))}
 
