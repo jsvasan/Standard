@@ -12,7 +12,13 @@ from bson import ObjectId
 import aiosmtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
 import bcrypt
+from openpyxl import Workbook
+from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+import io
+import base64
 
 
 ROOT_DIR = Path(__file__).parent
