@@ -338,7 +338,7 @@ export default function RegistrationForm() {
           setBuddies([
             { name: '', phone: '', email: '', aptNumber: '' },
           ]);
-          setNextOfKin([{ name: '', phone: '', email: '' }]);
+          setNextOfKin([{ name: '', phone: '', email: '', country: 'INDIA', city: 'Bangalore', address: '' }]);
         };
         
         if (Platform.OS === 'web') {
