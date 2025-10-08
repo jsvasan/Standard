@@ -272,8 +272,12 @@ export default function RegistrationForm() {
       if (response.ok) {
         const result = await response.json();
         
+        const message = result.is_update 
+          ? '✅ Registration UPDATED successfully!\n\nAn existing registration with this phone number was found and has been updated with the new information.'
+          : '✅ Registration submitted successfully!\n\nThis is a new registration.';
+        
         if (Platform.OS === 'web') {
-          const choice = confirm('✅ Registration submitted successfully!\n\nWould you like to:\n\nOK = View Registrations\nCancel = Submit Another');
+          const choice = confirm(`${message}\n\nWould you like to:\n\nOK = View Registrations\nCancel = Submit Another`);
           if (choice) {
             router.push('/registrations');
           } else {
