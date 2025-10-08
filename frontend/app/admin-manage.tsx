@@ -268,6 +268,117 @@ export default function AdminManage() {
     });
   };
 
+  const handleDownloadAll = () => {
+    setDownloadType('all');
+    setShowDownloadModal(true);
+  };
+
+  const handleDownloadNew = () => {
+    setDownloadType('new');
+    setShowDownloadModal(true);
+  };
+
+  const downloadExcelFile = (base64Data: string, filename: string) => {
+    try {
+      // Convert base64 to blob
+      const binaryString = atob(base64Data);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      const blob = new Blob([bytes], { 
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+      });
+
+      // Create download link
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Download error:', error);
+      if (Platform.OS === 'web') {
+        alert('Failed to download Excel file');
+      } else {
+        Alert.alert('Error', 'Failed to download Excel file');
+      }
+    }
+  };
+
+  const performDownload = async () => {
+    if (!downloadPassword.trim()) {
+      if (Platform.OS === 'web') {
+        alert('Please enter your admin password');
+      } else {
+        Alert.alert('Error', 'Please enter your admin password');
+      }
+      return;
+    }
+
+    setVerifyingDownload(true);
+    try {
+      const endpoint = downloadType === 'all' 
+        ? '/api/admin/download-all-excel' 
+        : '/api/admin/download-new-excel';
+
+      const response = await fetch(`${EXPO_PUBLIC_BACKEND_URL}${endpoint}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password: downloadPassword }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        
+        if (downloadType === 'new' && result.total_new === 0) {
+          if (Platform.OS === 'web') {
+            alert(result.message);
+          } else {
+            Alert.alert('Info', result.message);
+          }
+        } else {
+          // Download the file
+          downloadExcelFile(result.excel_data, result.filename);
+          
+          const successMessage = downloadType === 'all' 
+            ? `Downloaded ${result.total_registrations} registrations successfully!`
+            : `Downloaded ${result.total_new} new registrations since ${result.since_date}!`;
+            
+          if (Platform.OS === 'web') {
+            alert(successMessage);
+          } else {
+            Alert.alert('Success', successMessage);
+          }
+        }
+
+        setShowDownloadModal(false);
+        setDownloadPassword('');
+      } else {
+        const error = await response.json();
+        if (Platform.OS === 'web') {
+          alert('Error: ' + (error.detail || 'Download failed'));
+        } else {
+          Alert.alert('Error', error.detail || 'Download failed');
+        }
+      }
+    } catch (error) {
+      console.error('Download error:', error);
+      if (Platform.OS === 'web') {
+        alert('Network error. Please check your connection.');
+      } else {
+        Alert.alert('Error', 'Network error. Please check your connection.');
+      }
+    } finally {
+      setVerifyingDownload(false);
+    }
+  };
+
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
