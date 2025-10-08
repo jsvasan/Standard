@@ -341,7 +341,10 @@ export default function RegistrationForm() {
         style={styles.keyboardView}
       >
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>Health Registration</Text>
+          <View style={styles.headerContent}>
+            <Text style={styles.headerTitle}>Buddy Registration</Text>
+            <Text style={styles.headerSubtitle}>This App is meant for Residents of The Virtuoso ONLY</Text>
+          </View>
           <TouchableOpacity
             onPress={() => router.push('/registrations')}
             style={styles.viewButton}
