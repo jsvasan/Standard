@@ -574,6 +574,7 @@ async def create_registration(registration: RegistrationCreate):
         reg_dict = registration.dict()
         reg_dict['updatedAt'] = datetime.utcnow()
         
+        is_update = False
         if existing_reg:
             # Update existing registration
             reg_dict['createdAt'] = existing_reg['createdAt']
@@ -582,11 +583,13 @@ async def create_registration(registration: RegistrationCreate):
                 {"$set": reg_dict}
             )
             result_reg = await db.registrations.find_one({"_id": existing_reg['_id']})
+            is_update = True
         else:
             # Create new registration
             reg_dict['createdAt'] = datetime.utcnow()
             result = await db.registrations.insert_one(reg_dict)
             result_reg = await db.registrations.find_one({"_id": result.inserted_id})
+            is_update = False
         
         response_data = RegistrationResponse(
             id=str(result_reg['_id']),
