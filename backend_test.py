@@ -166,7 +166,7 @@ class EmailNotificationTester:
             )
             return None
     
-    async def check_backend_logs_for_email_errors(self):
+    def check_backend_logs_for_email_errors(self):
         """Check backend logs for email-related errors"""
         try:
             # Check recent backend logs for email errors
