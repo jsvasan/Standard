@@ -390,10 +390,10 @@ export default function RegistrationForm() {
             <Text style={styles.headerSubtitle}>This App is meant for Residents of The Virtuoso ONLY</Text>
           </View>
           <TouchableOpacity
-            onPress={() => router.push('/registrations')}
+            onPress={handleRegistrationsAccess}
             style={styles.viewButton}
-            accessibilityLabel="View Registrations"
-            testID="view-registrations-button"
+            accessibilityLabel="Admin: View Registrations"
+            testID="admin-registrations-button"
           >
             <Ionicons name="list" size={24} color="#007AFF" />
           </TouchableOpacity>
