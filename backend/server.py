@@ -391,14 +391,20 @@ async def register_admin(admin: AdminCreate):
         if existing_admin:
             raise HTTPException(status_code=400, detail="Admin already exists. Only one admin is allowed.")
         
-        admin_dict = admin.dict()
+        # Hash the password
+        plain_password = admin.password
+        password_hash = bcrypt.hashpw(plain_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        
+        admin_dict = admin.dict(exclude={'password'})
+        admin_dict['password_hash'] = password_hash
         admin_dict['createdAt'] = datetime.utcnow()
+        admin_dict['additional_emails'] = []
         
         result = await db.admins.insert_one(admin_dict)
         created_admin = await db.admins.find_one({"_id": result.inserted_id})
         
-        # Send confirmation email to admin
-        await send_admin_confirmation_email(created_admin)
+        # Send confirmation email to admin with password
+        await send_admin_confirmation_email(created_admin, plain_password)
         
         return AdminResponse(
             id=str(created_admin['_id']),
