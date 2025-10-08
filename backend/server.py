@@ -672,6 +672,113 @@ async def get_registration_by_id(registration_id: str):
         logger.error(f"Error fetching registration: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.put("/registrations/{registration_id}")
+async def update_registration_admin(registration_id: str, request: AdminRegistrationUpdateRequest):
+    """Admin endpoint to update a registration with password verification"""
+    try:
+        # Verify admin exists and password is correct
+        admin = await db.admins.find_one({})
+        if not admin:
+            raise HTTPException(status_code=404, detail="Admin not found")
+        
+        if not bcrypt.checkpw(request.password.encode('utf-8'), admin['password_hash'].encode('utf-8')):
+            raise HTTPException(status_code=401, detail="Invalid admin password")
+        
+        # Validate registration ID
+        if not ObjectId.is_valid(registration_id):
+            raise HTTPException(status_code=400, detail="Invalid registration ID")
+        
+        # Check if registration exists
+        existing_reg = await db.registrations.find_one({"_id": ObjectId(registration_id)})
+        if not existing_reg:
+            raise HTTPException(status_code=404, detail="Registration not found")
+        
+        # Validate the updated data structure
+        try:
+            # Validate personal info
+            PersonalInfo(**request.personalInfo)
+            # Validate buddies (1-2 required)
+            if len(request.buddies) < 1 or len(request.buddies) > 2:
+                raise HTTPException(status_code=400, detail="Exactly 1-2 buddies are required")
+            for buddy in request.buddies:
+                Buddy(**buddy)
+            # Validate next of kin (1-3 required) 
+            if len(request.nextOfKin) < 1 or len(request.nextOfKin) > 3:
+                raise HTTPException(status_code=400, detail="1-3 next of kin contacts are required")
+            for kin in request.nextOfKin:
+                NextOfKin(**kin)
+        except Exception as validation_error:
+            raise HTTPException(status_code=400, detail=f"Validation error: {str(validation_error)}")
+        
+        # Update registration
+        update_data = {
+            'personalInfo': request.personalInfo,
+            'buddies': request.buddies,
+            'nextOfKin': request.nextOfKin,
+            'updatedAt': datetime.utcnow()
+        }
+        
+        await db.registrations.update_one(
+            {"_id": ObjectId(registration_id)},
+            {"$set": update_data}
+        )
+        
+        # Fetch updated registration
+        updated_reg = await db.registrations.find_one({"_id": ObjectId(registration_id)})
+        
+        response_data = RegistrationResponse(
+            id=str(updated_reg['_id']),
+            personalInfo=PersonalInfo(**updated_reg['personalInfo']),
+            buddies=[Buddy(**buddy) for buddy in updated_reg['buddies']],
+            nextOfKin=[NextOfKin(**kin) for kin in updated_reg['nextOfKin']],
+            createdAt=updated_reg['createdAt']
+        )
+        
+        logger.info(f"Admin updated registration {registration_id}")
+        return response_data
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating registration: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.delete("/registrations/{registration_id}")
+async def delete_registration_admin(registration_id: str, request: AdminRegistrationDeleteRequest):
+    """Admin endpoint to delete a registration with password verification"""
+    try:
+        # Verify admin exists and password is correct
+        admin = await db.admins.find_one({})
+        if not admin:
+            raise HTTPException(status_code=404, detail="Admin not found")
+        
+        if not bcrypt.checkpw(request.password.encode('utf-8'), admin['password_hash'].encode('utf-8')):
+            raise HTTPException(status_code=401, detail="Invalid admin password")
+        
+        # Validate registration ID
+        if not ObjectId.is_valid(registration_id):
+            raise HTTPException(status_code=400, detail="Invalid registration ID")
+        
+        # Check if registration exists
+        existing_reg = await db.registrations.find_one({"_id": ObjectId(registration_id)})
+        if not existing_reg:
+            raise HTTPException(status_code=404, detail="Registration not found")
+        
+        # Delete registration
+        result = await db.registrations.delete_one({"_id": ObjectId(registration_id)})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Registration not found or already deleted")
+        
+        logger.info(f"Admin deleted registration {registration_id}")
+        return {"message": "Registration deleted successfully", "deleted_id": registration_id}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting registration: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Include the router in the main app
 app.include_router(api_router)
 
