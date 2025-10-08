@@ -169,41 +169,49 @@ export default function RegistrationForm() {
     }
   };
 
+  const showAlert = (title: string, message: string) => {
+    if (Platform.OS === 'web') {
+      alert(`${title}\n\n${message}`);
+    } else {
+      Alert.alert(title, message);
+    }
+  };
+
   const validateForm = () => {
     if (!registrantName) {
-      Alert.alert('Validation Error', 'Please enter your full name');
+      showAlert('Validation Error', 'Please enter your full name');
       return false;
     }
     if (!registrantAptNumber) {
-      Alert.alert('Validation Error', 'Please enter your apartment number');
+      showAlert('Validation Error', 'Please enter your apartment number');
       return false;
     }
     if (!dateOfBirth) {
-      Alert.alert('Validation Error', 'Please enter your date of birth');
+      showAlert('Validation Error', 'Please enter your date of birth');
       return false;
     }
     if (!registrantPhone) {
-      Alert.alert('Validation Error', 'Please enter your phone number');
+      showAlert('Validation Error', 'Please enter your phone number');
       return false;
     }
     if (!bloodGroup) {
-      Alert.alert('Validation Error', 'Please select a blood group');
+      showAlert('Validation Error', 'Please select a blood group');
       return false;
     }
 
     // Validate buddies (at least 1 required)
     if (buddies.length < 1) {
-      Alert.alert('Validation Error', 'At least 1 buddy is required');
+      showAlert('Validation Error', 'At least 1 buddy is required');
       return false;
     }
     for (let i = 0; i < buddies.length; i++) {
       const buddy = buddies[i];
       if (!buddy.name || !buddy.phone || !buddy.email || !buddy.aptNumber) {
-        Alert.alert('Validation Error', `Please fill in all details for Buddy ${i + 1}`);
+        showAlert('Validation Error', `Please fill in all details for Buddy ${i + 1}`);
         return false;
       }
       if (!validateEmail(buddy.email)) {
-        Alert.alert('Validation Error', `Invalid email for Buddy ${i + 1}`);
+        showAlert('Validation Error', `Invalid email for Buddy ${i + 1}`);
         return false;
       }
     }
@@ -212,11 +220,11 @@ export default function RegistrationForm() {
     for (let i = 0; i < nextOfKin.length; i++) {
       const kin = nextOfKin[i];
       if (!kin.name || !kin.phone || !kin.email) {
-        Alert.alert('Validation Error', `Please fill in all details for Next of Kin ${i + 1}`);
+        showAlert('Validation Error', `Please fill in all details for Next of Kin ${i + 1}`);
         return false;
       }
       if (!validateEmail(kin.email)) {
-        Alert.alert('Validation Error', `Invalid email for Next of Kin ${i + 1}`);
+        showAlert('Validation Error', `Invalid email for Next of Kin ${i + 1}`);
         return false;
       }
     }
