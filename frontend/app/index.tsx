@@ -755,10 +755,21 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#E5E5EA',
   },
+  headerContent: {
+    flex: 1,
+    marginRight: 16,
+  },
   headerTitle: {
     fontSize: 24,
     fontWeight: '700',
     color: '#000',
+    marginBottom: 4,
+  },
+  headerSubtitle: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#666',
+    fontStyle: 'italic',
   },
   viewButton: {
     padding: 8,
