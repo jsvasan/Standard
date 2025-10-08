@@ -432,13 +432,18 @@ async def get_admin():
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.delete("/admin/delete")
-async def delete_admin(email: dict):
+async def delete_admin(request: AdminDeleteRequest):
     try:
         # Find admin with matching email
-        admin = await db.admins.find_one({"email": email.get("email")})
+        admin = await db.admins.find_one({"email": request.email})
         
         if not admin:
             raise HTTPException(status_code=404, detail="Admin not found with this email")
+        
+        # Verify password
+        if 'password_hash' in admin:
+            if not bcrypt.checkpw(request.password.encode('utf-8'), admin['password_hash'].encode('utf-8')):
+                raise HTTPException(status_code=401, detail="Incorrect password")
         
         # Delete the admin
         result = await db.admins.delete_one({"_id": admin['_id']})
@@ -453,6 +458,44 @@ async def delete_admin(email: dict):
         raise
     except Exception as e:
         logger.error(f"Error deleting admin: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@api_router.put("/admin/additional-emails")
+async def update_additional_emails(emails: dict):
+    try:
+        admin = await db.admins.find_one({})
+        
+        if not admin:
+            raise HTTPException(status_code=404, detail="Admin not found")
+        
+        additional_emails = emails.get("additional_emails", [])
+        
+        # Validate max 2 emails
+        if len(additional_emails) > 2:
+            raise HTTPException(status_code=400, detail="Maximum 2 additional emails allowed")
+        
+        # Validate email formats
+        from email.utils import parseaddr
+        for email in additional_emails:
+            if email and not parseaddr(email)[1]:
+                raise HTTPException(status_code=400, detail=f"Invalid email format: {email}")
+        
+        # Update additional emails
+        result = await db.admins.update_one(
+            {"_id": admin['_id']},
+            {"$set": {"additional_emails": additional_emails}}
+        )
+        
+        if result.modified_count == 1 or result.matched_count == 1:
+            logger.info(f"Additional emails updated for admin: {admin['email']}")
+            return {"message": "Additional emails updated successfully", "additional_emails": additional_emails}
+        else:
+            raise HTTPException(status_code=500, detail="Failed to update additional emails")
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error updating additional emails: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @api_router.post("/registrations", response_model=RegistrationResponse)
