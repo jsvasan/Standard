@@ -270,17 +270,13 @@ export default function RegistrationForm() {
       });
 
       if (response.ok) {
-        Alert.alert(
-          'Success',
-          'Registration submitted successfully!',
-          [
-            {
-              text: 'View Registrations',
-              onPress: () => router.push('/registrations'),
-            },
-            {
-              text: 'Submit Another',
-              onPress: () => {
+        const result = await response.json();
+        
+        if (Platform.OS === 'web') {
+          const choice = confirm('✅ Registration submitted successfully!\n\nWould you like to:\n\nOK = View Registrations\nCancel = Submit Another');
+          if (choice) {
+            router.push('/registrations');
+          } else {
                 // Reset form
                 setRegistrantName('');
                 setRegistrantAptNumber('');
