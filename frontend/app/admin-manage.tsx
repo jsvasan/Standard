@@ -62,6 +62,16 @@ export default function AdminManage() {
   };
 
   const handleSaveAdditionalEmails = async () => {
+    // Validate password is entered
+    if (!emailPassword) {
+      if (Platform.OS === 'web') {
+        alert('Please enter your admin password to save changes.');
+      } else {
+        Alert.alert('Error', 'Please enter your admin password to save changes.');
+      }
+      return;
+    }
+
     // Filter out empty emails
     const validEmails = additionalEmails.filter(email => email.trim() !== '');
     
@@ -81,7 +91,7 @@ export default function AdminManage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ additional_emails: validEmails }),
+        body: JSON.stringify({ additional_emails: validEmails, password: emailPassword }),
       });
 
       if (response.ok) {
