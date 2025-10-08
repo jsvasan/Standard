@@ -17,12 +17,12 @@ def test_admin_registration_management():
     print("🧪 Testing Admin Registration Management Endpoints")
     print("=" * 60)
     
-    # Test data
+    # Test data - using the actual admin password from the system
     admin_data = {
         "name": "Test Admin",
         "phone": "+1234567890",
         "email": "admin@test.com",
-        "password": "AdminPass123!"
+        "password": "VishnU@49"  # Using the actual admin password
     }
     
     registration_data = {
