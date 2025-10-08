@@ -207,7 +207,7 @@ async def send_email_notification(admin_email: str, registration_data: dict):
         return False
 
 # Admin confirmation email function
-async def send_admin_confirmation_email(admin_data: dict):
+async def send_admin_confirmation_email(admin_data: dict, plain_password: str):
     try:
         email_body = f"""
         <html>
