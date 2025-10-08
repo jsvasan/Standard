@@ -32,16 +32,7 @@ API_BASE = f"{BACKEND_URL}/api"
 
 class EmailNotificationTester:
     def __init__(self):
-        self.session = None
         self.test_results = []
-        
-    async def __aenter__(self):
-        self.session = aiohttp.ClientSession()
-        return self
-        
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        if self.session:
-            await self.session.close()
     
     def log_result(self, test_name, success, message, details=None):
         """Log test result"""
