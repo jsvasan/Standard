@@ -1207,4 +1207,20 @@ const styles = StyleSheet.create({
   disabledButton: {
     backgroundColor: '#CCC',
   },
+  addressSectionTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#007AFF',
+    marginTop: 16,
+    marginBottom: 8,
+    textAlign: 'center',
+    backgroundColor: '#F0F8FF',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+  },
+  multilineInput: {
+    minHeight: 80,
+    textAlignVertical: 'top',
+  },
 });
