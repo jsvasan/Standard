@@ -352,8 +352,9 @@ export default function RegistrationForm() {
                   style={styles.input}
                   value={dateOfBirth}
                   onChangeText={handleDateOfBirthChange}
-                  placeholder="YYYY-MM-DD"
+                  placeholder="DD/MM/YYYY"
                   placeholderTextColor="#999"
+                  keyboardType="numeric"
                 />
                 {age && (
                   <Text style={styles.ageDisplay}>Age: {age} years</Text>
