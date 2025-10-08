@@ -41,7 +41,7 @@ GMAIL_EMAIL = os.environ.get('GMAIL_EMAIL')
 GMAIL_PASSWORD = os.environ.get('GMAIL_PASSWORD')
 
 # Email sending function
-async def send_email_notification(admin_email: str, registration_data: dict):
+async def send_email_notification(admin_email: str, registration_data: dict, include_excel: bool = True):
     try:
         # Format registration data for email
         # Calculate age from date of birth (DD/MM/YYYY format)
