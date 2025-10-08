@@ -297,7 +297,7 @@ export default function AdminManage() {
               </View>
 
               <Text style={styles.deleteInstruction}>
-                To confirm deletion, please enter the admin email address:
+                To confirm deletion, please enter the admin email address and password:
               </Text>
 
               <Text style={styles.emailDisplay}>{admin.email}</Text>
