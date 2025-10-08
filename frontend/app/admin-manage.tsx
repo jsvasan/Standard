@@ -38,6 +38,11 @@ export default function AdminManage() {
   const [editingEmails, setEditingEmails] = useState(false);
   const [savingEmails, setSavingEmails] = useState(false);
   const [emailPassword, setEmailPassword] = useState('');
+  
+  // Password verification for page access
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [accessPassword, setAccessPassword] = useState('');
+  const [verifying, setVerifying] = useState(false);
 
   useEffect(() => {
     fetchAdmin();
