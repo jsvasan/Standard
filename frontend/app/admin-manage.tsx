@@ -313,6 +313,17 @@ export default function AdminManage() {
                 autoCapitalize="none"
               />
 
+              <Text style={styles.label}>Enter Admin Password *</Text>
+              <TextInput
+                style={styles.input}
+                value={deletePassword}
+                onChangeText={setDeletePassword}
+                placeholder="Enter admin password"
+                placeholderTextColor="#999"
+                secureTextEntry={true}
+                autoCapitalize="none"
+              />
+
               <View style={styles.buttonRow}>
                 <TouchableOpacity
                   style={styles.cancelButton}
