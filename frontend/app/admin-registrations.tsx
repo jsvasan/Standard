@@ -191,6 +191,7 @@ export default function AdminRegistrations() {
       if (response.ok) {
         showAlert('Success', 'Registration updated successfully');
         setShowEditModal(false);
+        setVerifiedPassword(''); // Clear verified password
         await fetchRegistrations(); // Refresh list
       } else {
         const error = await response.json();
