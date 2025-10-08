@@ -63,6 +63,7 @@ export default function AdminRegistrations() {
   // Password verification modal
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [password, setPassword] = useState('');
+  const [verifiedPassword, setVerifiedPassword] = useState(''); // Store verified admin password
   const [verifying, setVerifying] = useState(false);
   const [pendingAction, setPendingAction] = useState<{ type: 'edit' | 'delete', reg: Registration } | null>(null);
   
