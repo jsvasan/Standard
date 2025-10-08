@@ -478,9 +478,12 @@ def create_excel_from_registrations(registrations_list: List[dict], filename: st
         'Current Ailments', 'Buddy 1 Name', 'Buddy 1 Phone', 'Buddy 1 Email',
         'Buddy 1 Apt', 'Buddy 2 Name', 'Buddy 2 Phone', 'Buddy 2 Email',
         'Buddy 2 Apt', 'Next of Kin 1 Name', 'Next of Kin 1 Phone', 
-        'Next of Kin 1 Email', 'Next of Kin 2 Name', 'Next of Kin 2 Phone',
-        'Next of Kin 2 Email', 'Next of Kin 3 Name', 'Next of Kin 3 Phone',
-        'Next of Kin 3 Email'
+        'Next of Kin 1 Email', 'Next of Kin 1 Country', 'Next of Kin 1 City', 
+        'Next of Kin 1 Address', 'Next of Kin 2 Name', 'Next of Kin 2 Phone',
+        'Next of Kin 2 Email', 'Next of Kin 2 Country', 'Next of Kin 2 City',
+        'Next of Kin 2 Address', 'Next of Kin 3 Name', 'Next of Kin 3 Phone',
+        'Next of Kin 3 Email', 'Next of Kin 3 Country', 'Next of Kin 3 City',
+        'Next of Kin 3 Address'
     ]
     
     # Add headers
