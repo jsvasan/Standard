@@ -82,7 +82,7 @@ class EmailNotificationTester:
             )
             return None
     
-    async def create_test_registration(self):
+    def create_test_registration(self):
         """Create a test registration to trigger email notification"""
         test_registration = {
             "personalInfo": {
@@ -134,31 +134,29 @@ class EmailNotificationTester:
         }
         
         try:
-            async with self.session.post(
+            response = requests.post(
                 f"{API_BASE}/registrations",
                 json=test_registration,
                 headers={'Content-Type': 'application/json'}
-            ) as response:
-                
-                response_text = await response.text()
-                
-                if response.status == 200:
-                    registration_data = json.loads(response_text) if response_text else {}
-                    self.log_result(
-                        "Test Registration Creation",
-                        True,
-                        f"Registration created successfully for {test_registration['personalInfo']['registrantName']}",
-                        {"registration_id": registration_data.get('id'), "is_update": registration_data.get('is_update')}
-                    )
-                    return registration_data
-                else:
-                    self.log_result(
-                        "Test Registration Creation",
-                        False,
-                        f"Failed to create registration: HTTP {response.status}",
-                        {"response": response_text}
-                    )
-                    return None
+            )
+            
+            if response.status_code == 200:
+                registration_data = response.json()
+                self.log_result(
+                    "Test Registration Creation",
+                    True,
+                    f"Registration created successfully for {test_registration['personalInfo']['registrantName']}",
+                    {"registration_id": registration_data.get('id'), "is_update": registration_data.get('is_update')}
+                )
+                return registration_data
+            else:
+                self.log_result(
+                    "Test Registration Creation",
+                    False,
+                    f"Failed to create registration: HTTP {response.status_code}",
+                    {"response": response.text}
+                )
+                return None
                     
         except Exception as e:
             self.log_result(
