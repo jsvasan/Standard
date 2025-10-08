@@ -80,7 +80,7 @@ export default function AdminSetup() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, phone, email }),
+        body: JSON.stringify({ name, phone, email, password }),
       });
 
       if (response.ok) {
