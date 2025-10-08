@@ -614,6 +614,9 @@ export default function AdminManage() {
             </View>
           )}
 
+          {/* Bottom Copyright */}
+          <Text style={styles.copyrightBottom}>Developed by JS with AI Coding App</Text>
+
           <View style={styles.bottomPadding} />
         </View>
       </ScrollView>
