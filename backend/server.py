@@ -442,6 +442,7 @@ async def get_admin():
             name=admin['name'],
             phone=admin['phone'],
             email=admin['email'],
+            additional_emails=admin.get('additional_emails', []),
             createdAt=admin['createdAt']
         )
     except Exception as e:
