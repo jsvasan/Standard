@@ -78,9 +78,9 @@ export default function RegistrationForm() {
     { name: '', phone: '', email: '', aptNumber: '' },
   ]);
 
-  // Next of Kin State (1-3 contacts)
+  // Next of Kin State (1-3 contacts) with address
   const [nextOfKin, setNextOfKin] = useState([
-    { name: '', phone: '', email: '' },
+    { name: '', phone: '', email: '', country: 'INDIA', city: 'Bangalore', address: '' },
   ]);
 
   const toggleSection = (section: keyof typeof expandedSections) => {
