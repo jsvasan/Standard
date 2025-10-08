@@ -191,13 +191,40 @@ async def send_email_notification(admin_email: str, registration_data: dict, inc
         """
         
         # Create email message
-        message = MIMEMultipart('alternative')
+        message = MIMEMultipart('mixed')
         message['From'] = GMAIL_EMAIL
         message['To'] = admin_email
-        message['Subject'] = f"New Health Registration - {registration_data['personalInfo']['registrantName']}"
+        message['Subject'] = f"New Buddy Registration - {registration_data['personalInfo']['registrantName']}"
         
+        # Add HTML body
         html_part = MIMEText(email_body, 'html')
         message.attach(html_part)
+        
+        # Add Excel attachment if requested
+        if include_excel:
+            try:
+                # Create Excel file with this registration
+                excel_data = create_excel_from_registrations([registration_data])
+                
+                # Create attachment
+                excel_attachment = MIMEBase('application', 'vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+                excel_attachment.set_payload(excel_data)
+                encoders.encode_base64(excel_attachment)
+                
+                # Set filename and headers
+                registrant_name = registration_data['personalInfo']['registrantName'].replace(' ', '_')
+                current_date = datetime.now().strftime('%Y%m%d_%H%M%S')
+                filename = f"Registration_{registrant_name}_{current_date}.xlsx"
+                
+                excel_attachment.add_header(
+                    'Content-Disposition',
+                    f'attachment; filename="{filename}"'
+                )
+                
+                message.attach(excel_attachment)
+                logger.info(f"Excel attachment created: {filename}")
+            except Exception as e:
+                logger.error(f"Failed to create Excel attachment: {str(e)}")
         
         # Send email via Gmail SMTP
         await aiosmtplib.send(
