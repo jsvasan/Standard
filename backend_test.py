@@ -47,33 +47,33 @@ class EmailNotificationTester:
             'timestamp': datetime.now().isoformat()
         })
     
-    async def test_admin_exists(self):
+    def test_admin_exists(self):
         """Test if admin exists in the system"""
         try:
-            async with self.session.get(f"{API_BASE}/admin") as response:
-                if response.status == 200:
-                    admin_data = await response.json()
-                    if admin_data:
-                        self.log_result(
-                            "Admin Exists Check", 
-                            True, 
-                            f"Admin found: {admin_data.get('email', 'Unknown')}"
-                        )
-                        return admin_data
-                    else:
-                        self.log_result(
-                            "Admin Exists Check", 
-                            False, 
-                            "No admin found in system"
-                        )
-                        return None
+            response = requests.get(f"{API_BASE}/admin")
+            if response.status_code == 200:
+                admin_data = response.json()
+                if admin_data:
+                    self.log_result(
+                        "Admin Exists Check", 
+                        True, 
+                        f"Admin found: {admin_data.get('email', 'Unknown')}"
+                    )
+                    return admin_data
                 else:
                     self.log_result(
                         "Admin Exists Check", 
                         False, 
-                        f"Failed to check admin: HTTP {response.status}"
+                        "No admin found in system"
                     )
                     return None
+            else:
+                self.log_result(
+                    "Admin Exists Check", 
+                    False, 
+                    f"Failed to check admin: HTTP {response.status_code}"
+                )
+                return None
         except Exception as e:
             self.log_result(
                 "Admin Exists Check", 
