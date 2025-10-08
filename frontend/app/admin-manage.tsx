@@ -47,12 +47,83 @@ export default function AdminManage() {
       if (response.ok) {
         const data = await response.json();
         setAdmin(data);
+        // Load additional emails if they exist
+        if (data.additional_emails) {
+          setAdditionalEmails(data.additional_emails);
+        }
       }
     } catch (error) {
       console.error('Error fetching admin:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSaveAdditionalEmails = async () => {
+    // Filter out empty emails
+    const validEmails = additionalEmails.filter(email => email.trim() !== '');
+    
+    if (validEmails.length > 2) {
+      if (Platform.OS === 'web') {
+        alert('Maximum 2 additional emails allowed');
+      } else {
+        Alert.alert('Error', 'Maximum 2 additional emails allowed');
+      }
+      return;
+    }
+
+    setSavingEmails(true);
+    try {
+      const response = await fetch(`${EXPO_PUBLIC_BACKEND_URL}/api/admin/additional-emails`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ additional_emails: validEmails }),
+      });
+
+      if (response.ok) {
+        if (Platform.OS === 'web') {
+          alert('✅ Additional emails updated successfully!');
+        } else {
+          Alert.alert('Success', 'Additional emails updated successfully!');
+        }
+        setEditingEmails(false);
+        await fetchAdmin(); // Refresh admin data
+      } else {
+        const error = await response.json();
+        if (Platform.OS === 'web') {
+          alert('Error: ' + (error.detail || 'Failed to update additional emails'));
+        } else {
+          Alert.alert('Error', error.detail || 'Failed to update additional emails');
+        }
+      }
+    } catch (error) {
+      console.error('Update error:', error);
+      if (Platform.OS === 'web') {
+        alert('Network error. Please check your connection.');
+      } else {
+        Alert.alert('Error', 'Network error. Please check your connection.');
+      }
+    } finally {
+      setSavingEmails(false);
+    }
+  };
+
+  const updateEmailAtIndex = (index: number, value: string) => {
+    const newEmails = [...additionalEmails];
+    newEmails[index] = value;
+    setAdditionalEmails(newEmails);
+  };
+
+  const addEmailField = () => {
+    if (additionalEmails.length < 2) {
+      setAdditionalEmails([...additionalEmails, '']);
+    }
+  };
+
+  const removeEmailField = (index: number) => {
+    setAdditionalEmails(additionalEmails.filter((_, i) => i !== index));
   };
 
   const handleDeleteAdmin = async () => {
