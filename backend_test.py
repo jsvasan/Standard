@@ -231,7 +231,7 @@ class EmailNotificationTester:
                 f"Could not check backend logs: {str(e)}"
             )
     
-    async def test_email_configuration(self):
+    def test_email_configuration(self):
         """Test email configuration from environment"""
         try:
             # Read backend .env file
