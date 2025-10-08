@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Backend API Testing for Health Registration App
-Focus: Testing registration submission API with is_update field and unique phone constraint
+Backend API Testing for Admin Registration Management
+Tests the new PUT and DELETE endpoints for admin registration management
 """
 
 import requests
