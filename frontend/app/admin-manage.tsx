@@ -31,6 +31,11 @@ export default function AdminManage() {
   const [confirmEmail, setConfirmEmail] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  
+  // Additional emails state
+  const [additionalEmails, setAdditionalEmails] = useState<string[]>([]);
+  const [editingEmails, setEditingEmails] = useState(false);
+  const [savingEmails, setSavingEmails] = useState(false);
 
   useEffect(() => {
     fetchAdmin();
