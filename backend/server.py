@@ -736,7 +736,26 @@ async def update_registration_admin(registration_id: str, request: AdminRegistra
         
         # Send email notifications for the update
         try:
-            await send_email_notification(updated_reg, is_update=True)
+            admin = await db.admins.find_one({})
+            if admin:
+                # Send to primary admin email
+                await send_email_notification(admin['email'], updated_reg)
+                
+                # Send to additional emails if configured
+                if 'additional_emails' in admin and admin['additional_emails']:
+                    for email in admin['additional_emails']:
+                        await send_email_notification(email, updated_reg)
+                
+                # Send to registrant's buddies
+                for buddy in updated_reg['buddies']:
+                    if buddy.get('email'):
+                        await send_email_notification(buddy['email'], updated_reg)
+                
+                # Send to next of kin
+                for kin in updated_reg['nextOfKin']:
+                    if kin.get('email'):
+                        await send_email_notification(kin['email'], updated_reg)
+                
             logger.info(f"Update notification emails sent for registration {registration_id}")
         except Exception as email_error:
             logger.error(f"Failed to send update notification emails: {str(email_error)}")
