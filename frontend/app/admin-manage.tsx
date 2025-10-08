@@ -507,6 +507,26 @@ export default function AdminManage() {
             )}
           </View>
 
+          <View style={styles.registrationManageCard}>
+            <View style={styles.cardHeader}>
+              <Ionicons name="list" size={24} color="#007AFF" />
+              <Text style={styles.cardTitle}>Registration Management</Text>
+            </View>
+            
+            <Text style={styles.registrationManageDescription}>
+              View, edit, and delete health registrations with admin privileges
+            </Text>
+
+            <TouchableOpacity
+              style={styles.manageRegistrationsButton}
+              onPress={() => router.push('/admin-registrations')}
+            >
+              <Ionicons name="settings" size={20} color="#007AFF" />
+              <Text style={styles.manageRegistrationsButtonText}>Manage Registrations</Text>
+              <Ionicons name="arrow-forward" size={18} color="#007AFF" />
+            </TouchableOpacity>
+          </View>
+
           <View style={styles.warningCard}>
             <View style={styles.warningHeader}>
               <Ionicons name="warning" size={24} color="#FF9500" />
