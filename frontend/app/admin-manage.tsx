@@ -530,6 +530,49 @@ export default function AdminManage() {
             </TouchableOpacity>
           </View>
 
+          <View style={styles.excelDownloadCard}>
+            <View style={styles.cardHeader}>
+              <Ionicons name="document-text" size={24} color="#28A745" />
+              <Text style={styles.cardTitle}>Excel Reports</Text>
+            </View>
+            
+            <Text style={styles.excelDescription}>
+              Download registration data as Excel files for record keeping and analysis
+            </Text>
+
+            <View style={styles.downloadButtonsContainer}>
+              <TouchableOpacity
+                style={[styles.downloadButton, styles.downloadAllButton]}
+                onPress={() => handleDownloadAll()}
+                disabled={downloadingAll}
+              >
+                {downloadingAll ? (
+                  <ActivityIndicator size="small" color="#FFF" />
+                ) : (
+                  <>
+                    <Ionicons name="download" size={20} color="#FFF" />
+                    <Text style={styles.downloadAllButtonText}>Download All</Text>
+                  </>
+                )}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.downloadButton, styles.downloadNewButton]}
+                onPress={() => handleDownloadNew()}
+                disabled={downloadingNew}
+              >
+                {downloadingNew ? (
+                  <ActivityIndicator size="small" color="#FFF" />
+                ) : (
+                  <>
+                    <Ionicons name="refresh" size={20} color="#FFF" />
+                    <Text style={styles.downloadNewButtonText}>New Only</Text>
+                  </>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+
           <View style={styles.warningCard}>
             <View style={styles.warningHeader}>
               <Ionicons name="warning" size={24} color="#FF9500" />
