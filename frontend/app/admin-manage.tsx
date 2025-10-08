@@ -516,6 +516,49 @@ export default function AdminManage() {
             </View>
           </View>
 
+          <View style={[styles.excelDownloadCard, {borderWidth: 2, borderColor: '#FF0000'}]}>
+            <View style={styles.cardHeader}>
+              <Ionicons name="document-text" size={24} color="#28A745" />
+              <Text style={styles.cardTitle}>Excel Reports (MOVED HERE)</Text>
+            </View>
+            
+            <Text style={styles.excelDescription}>
+              Download registration data as Excel files for record keeping and analysis
+            </Text>
+
+            <View style={styles.downloadButtonsContainer}>
+              <TouchableOpacity
+                style={[styles.downloadButton, styles.downloadAllButton]}
+                onPress={() => handleDownloadAll()}
+                disabled={downloadingAll}
+              >
+                {downloadingAll ? (
+                  <ActivityIndicator size="small" color="#FFF" />
+                ) : (
+                  <>
+                    <Ionicons name="download" size={20} color="#FFF" />
+                    <Text style={styles.downloadAllButtonText}>Entire Registrations</Text>
+                  </>
+                )}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.downloadButton, styles.downloadNewButton]}
+                onPress={() => handleDownloadNew()}
+                disabled={downloadingNew}
+              >
+                {downloadingNew ? (
+                  <ActivityIndicator size="small" color="#FFF" />
+                ) : (
+                  <>
+                    <Ionicons name="refresh" size={20} color="#FFF" />
+                    <Text style={styles.downloadNewButtonText}>Newly Added Registrations</Text>
+                  </>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+
           <View style={styles.emailsCard}>
             <View style={styles.emailsHeader}>
               <Ionicons name="mail" size={24} color="#007AFF" />
