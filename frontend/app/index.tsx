@@ -975,4 +975,22 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#fff',
   },
+  copyrightContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: '#F5F5F7',
+  },
+  copyrightTop: {
+    fontSize: 12,
+    color: '#666',
+    textAlign: 'center',
+    fontStyle: 'italic',
+  },
+  copyrightBottom: {
+    fontSize: 12,
+    color: '#666',
+    textAlign: 'center',
+    marginTop: 20,
+    fontStyle: 'italic',
+  },
 });
