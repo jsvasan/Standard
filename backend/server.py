@@ -496,10 +496,16 @@ async def create_registration(registration: RegistrationCreate):
             createdAt=result_reg['createdAt']
         )
         
-        # Send email notification to admin
+        # Send email notification to admin and additional emails
         admin = await db.admins.find_one({})
         if admin:
+            # Send to primary admin email
             await send_email_notification(admin['email'], reg_dict)
+            
+            # Send to additional emails if configured
+            if 'additional_emails' in admin and admin['additional_emails']:
+                for email in admin['additional_emails']:
+                    await send_email_notification(email, reg_dict)
         
         return response_data
     except HTTPException:
