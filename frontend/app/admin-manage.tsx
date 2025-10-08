@@ -66,6 +66,49 @@ export default function AdminManage() {
     }
   };
 
+  const handleVerifyPassword = async () => {
+    if (!accessPassword) {
+      if (Platform.OS === 'web') {
+        alert('Please enter your password');
+      } else {
+        Alert.alert('Error', 'Please enter your password');
+      }
+      return;
+    }
+
+    setVerifying(true);
+    try {
+      const response = await fetch(`${EXPO_PUBLIC_BACKEND_URL}/api/admin/verify-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password: accessPassword }),
+      });
+
+      if (response.ok) {
+        setIsAuthenticated(true);
+        setAccessPassword(''); // Clear password from memory
+      } else {
+        const error = await response.json();
+        if (Platform.OS === 'web') {
+          alert('Error: ' + (error.detail || 'Incorrect password'));
+        } else {
+          Alert.alert('Error', error.detail || 'Incorrect password');
+        }
+      }
+    } catch (error) {
+      console.error('Verification error:', error);
+      if (Platform.OS === 'web') {
+        alert('Network error. Please check your connection.');
+      } else {
+        Alert.alert('Error', 'Network error. Please check your connection.');
+      }
+    } finally {
+      setVerifying(false);
+    }
+  };
+
   const handleSaveAdditionalEmails = async () => {
     // Validate password is entered
     if (!emailPassword) {
