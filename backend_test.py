@@ -291,10 +291,10 @@ class EmailNotificationTester:
                 f"Could not read email configuration: {str(e)}"
             )
     
-    async def wait_for_email_processing(self, seconds=10):
+    def wait_for_email_processing(self, seconds=10):
         """Wait for email processing and check logs"""
         logger.info(f"Waiting {seconds} seconds for email processing...")
-        await asyncio.sleep(seconds)
+        time.sleep(seconds)
         
         # Check logs again for recent email activity
         try:
