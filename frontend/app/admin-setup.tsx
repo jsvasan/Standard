@@ -153,6 +153,16 @@ export default function AdminSetup() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <Text style={styles.backButtonText}>← Back</Text>
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Admin Setup</Text>
+        <TouchableOpacity onPress={() => router.push('/')} style={styles.homeButton}>
+          <Text style={styles.homeButtonText}>🏠 Home</Text>
+        </TouchableOpacity>
+      </View>
+
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardView}
